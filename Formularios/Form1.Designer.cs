@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             eliminarClienteButton = new Button();
             label2 = new Label();
             registrarClienteButton = new Button();
@@ -60,8 +61,8 @@
             CedulaComboBox = new ComboBox();
             CedulaLabel = new Label();
             panel4 = new Panel();
+            tipoCarrocomboBox = new ComboBox();
             label4 = new Label();
-            TipoTextBox = new TextBox();
             panel5 = new Panel();
             label5 = new Label();
             ModeloTextBox = new TextBox();
@@ -84,8 +85,8 @@
             modificarCedulaComboBox = new ComboBox();
             modificarCédulaLabel = new Label();
             panel12 = new Panel();
+            modificarTipoCarrocomboBox = new ComboBox();
             modificarTipoLabel = new Label();
-            modificarTipoVehiculoTextBox = new TextBox();
             panel13 = new Panel();
             modificarModeloLabel = new Label();
             modificarModeloVehiculoTextBox = new TextBox();
@@ -221,6 +222,7 @@
             pagarFacturaButton.TabIndex = 7;
             pagarFacturaButton.Text = "Pagar factura";
             pagarFacturaButton.UseVisualStyleBackColor = true;
+            pagarFacturaButton.Click += pagarFacturaButton_Click;
             // 
             // listarClientesbutton
             // 
@@ -480,12 +482,22 @@
             // 
             // panel4
             // 
+            panel4.Controls.Add(tipoCarrocomboBox);
             panel4.Controls.Add(label4);
-            panel4.Controls.Add(TipoTextBox);
             panel4.Location = new Point(3, 217);
             panel4.Name = "panel4";
             panel4.Size = new Size(292, 66);
             panel4.TabIndex = 3;
+            // 
+            // tipoCarrocomboBox
+            // 
+            tipoCarrocomboBox.DropDownStyle = ComboBoxStyle.DropDownList;
+            tipoCarrocomboBox.FormattingEnabled = true;
+            tipoCarrocomboBox.Items.AddRange(new object[] { "Auto", "Camioneta" });
+            tipoCarrocomboBox.Location = new Point(13, 36);
+            tipoCarrocomboBox.Name = "tipoCarrocomboBox";
+            tipoCarrocomboBox.Size = new Size(262, 23);
+            tipoCarrocomboBox.TabIndex = 2;
             // 
             // label4
             // 
@@ -495,16 +507,6 @@
             label4.TabIndex = 1;
             label4.Text = "Tipo";
             label4.TextAlign = ContentAlignment.MiddleLeft;
-            // 
-            // TipoTextBox
-            // 
-            TipoTextBox.Location = new Point(13, 30);
-            TipoTextBox.MaxLength = 20;
-            TipoTextBox.Name = "TipoTextBox";
-            TipoTextBox.PlaceholderText = "Tipo";
-            TipoTextBox.Size = new Size(262, 23);
-            TipoTextBox.TabIndex = 0;
-            TipoTextBox.KeyPress += TipoTextBox_KeyPress;
             // 
             // panel5
             // 
@@ -723,12 +725,22 @@
             // 
             // panel12
             // 
+            panel12.Controls.Add(modificarTipoCarrocomboBox);
             panel12.Controls.Add(modificarTipoLabel);
-            panel12.Controls.Add(modificarTipoVehiculoTextBox);
             panel12.Location = new Point(3, 217);
             panel12.Name = "panel12";
             panel12.Size = new Size(292, 66);
             panel12.TabIndex = 3;
+            // 
+            // modificarTipoCarrocomboBox
+            // 
+            modificarTipoCarrocomboBox.DropDownStyle = ComboBoxStyle.DropDownList;
+            modificarTipoCarrocomboBox.FormattingEnabled = true;
+            modificarTipoCarrocomboBox.Items.AddRange(new object[] { "Auto", "Camioneta" });
+            modificarTipoCarrocomboBox.Location = new Point(13, 36);
+            modificarTipoCarrocomboBox.Name = "modificarTipoCarrocomboBox";
+            modificarTipoCarrocomboBox.Size = new Size(262, 23);
+            modificarTipoCarrocomboBox.TabIndex = 3;
             // 
             // modificarTipoLabel
             // 
@@ -738,15 +750,6 @@
             modificarTipoLabel.TabIndex = 1;
             modificarTipoLabel.Text = "Tipo";
             modificarTipoLabel.TextAlign = ContentAlignment.MiddleLeft;
-            // 
-            // modificarTipoVehiculoTextBox
-            // 
-            modificarTipoVehiculoTextBox.Location = new Point(13, 30);
-            modificarTipoVehiculoTextBox.MaxLength = 20;
-            modificarTipoVehiculoTextBox.Name = "modificarTipoVehiculoTextBox";
-            modificarTipoVehiculoTextBox.PlaceholderText = "Tipo";
-            modificarTipoVehiculoTextBox.Size = new Size(262, 23);
-            modificarTipoVehiculoTextBox.TabIndex = 0;
             // 
             // panel13
             // 
@@ -1018,6 +1021,7 @@
             Controls.Add(mainLabel);
             Font = new Font("Segoe UI", 9F);
             FormBorderStyle = FormBorderStyle.Fixed3D;
+            Icon = (Icon)resources.GetObject("$this.Icon");
             MaximizeBox = false;
             Name = "Form1";
             StartPosition = FormStartPosition.CenterScreen;
@@ -1037,7 +1041,6 @@
             panel3.ResumeLayout(false);
             panel3.PerformLayout();
             panel4.ResumeLayout(false);
-            panel4.PerformLayout();
             panel5.ResumeLayout(false);
             panel5.PerformLayout();
             panelModificar.ResumeLayout(false);
@@ -1051,7 +1054,6 @@
             panel11.ResumeLayout(false);
             panel11.PerformLayout();
             panel12.ResumeLayout(false);
-            panel12.PerformLayout();
             panel13.ResumeLayout(false);
             panel13.PerformLayout();
             panelServicios.ResumeLayout(false);
@@ -1090,7 +1092,6 @@
         private Label CedulaLabel;
         private Panel panel4;
         private Label label4;
-        private TextBox TipoTextBox;
         private Panel panel5;
         private Label label5;
         private TextBox ModeloTextBox;
@@ -1118,7 +1119,6 @@
         private Label modificarCédulaLabel;
         private Panel panel12;
         private Label modificarTipoLabel;
-        private TextBox modificarTipoVehiculoTextBox;
         private Panel panel13;
         private Label modificarModeloLabel;
         private TextBox modificarModeloVehiculoTextBox;
@@ -1150,5 +1150,7 @@
         private Button cancelarServiciobutton;
         private Button pagarFacturaButton;
         private Button listarClientesbutton;
+        private ComboBox tipoCarrocomboBox;
+        private ComboBox modificarTipoCarrocomboBox;
     }
 }

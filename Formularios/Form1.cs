@@ -18,7 +18,7 @@ namespace Proyecto_Autolavado_Georges
         List<Cliente> Clientes = new();
 
         public int Id { get; private set; } = 1;
-        private string Servicio = "";
+        private string? Servicio = null;
         private int IdBusqueda;
 
         public void Registrar(Datos dat, Vehiculo carr, string cedula)
@@ -66,20 +66,25 @@ namespace Proyecto_Autolavado_Georges
             }
         }
 
+        /// <summary>
+        /// Abre un form para ingresar el ID del cliente, retorna el ID - 1
+        /// </summary>
+        /// <returns>booleano que indica si se encontró o no el cliente</returns>
         public bool BuscarID()
         {
             IngresarID ingresar = new();
             ingresar.ShowDialog();
-            IdBusqueda = ingresar.ReturnID - 1;
+            IdBusqueda = ingresar.ReturnID;
             ingresar.Dispose();
-            if (IdBusqueda < Clientes.Count && IdBusqueda != -2)
+            foreach (Cliente client in Clientes)
             {
-                return true;
+                if (client.Id == IdBusqueda)
+                {
+                    IdBusqueda--;
+                    return true;
+                }
             }
-            else
-            {
-                return false;
-            }
+            return false;
         }
 
         public void SeleccionarServicio()
@@ -90,27 +95,27 @@ namespace Proyecto_Autolavado_Georges
             ingresar.Dispose();
         }
 
-        public bool IngresarColaServicios()
+        public bool IngresarColaServicios(Cliente client)
         {
             if (Servicio == Servicios.ServiciosDisp[0])
             {
-                if (colaBalanceo.Insertar(IdBusqueda)) return true;
+                if (colaBalanceo.Insertar((int)client.Id)) return true;
             }
             else if (Servicio == Servicios.ServiciosDisp[1])
             {
-                if (colaAceite.Insertar(IdBusqueda)) return true;
+                if (colaAceite.Insertar((int)client.Id)) return true;
             }
             else if (Servicio == Servicios.ServiciosDisp[2])
             {
-                if (colaAspirado.Insertar(IdBusqueda)) return true;
+                if (colaAspirado.Insertar((int)client.Id)) return true;
             }
             else if (Servicio == Servicios.ServiciosDisp[3])
             {
-                if (colaLavado.Insertar(IdBusqueda)) return true;
+                if (colaLavado.Insertar((int)client.Id)) return true;
             }
             else if (Servicio == Servicios.ServiciosDisp[4])
             {
-                if (colaSecado.Insertar(IdBusqueda)) return true;
+                if (colaSecado.Insertar((int)client.Id)) return true;
             }
             return false;
         }
@@ -148,13 +153,12 @@ namespace Proyecto_Autolavado_Georges
             MainMenu();
         }
 
-        public void EliminarColaBalanceo(Cliente cliente)
+        public void EliminarColaServicio(Cliente cliente, Cola<int> cola)
         {
-            DialogResult resp;
-            resp = MessageBox.Show("Está seguro que desea cancelar su servicio?", "Cancelar balanceo", MessageBoxButtons.YesNo, MessageBoxIcon.Information);
-            if (resp == DialogResult.Yes)
+            if (DialogResult.Yes == MessageBox.Show("Está seguro que desea cancelar su servicio?", "Cancelar servicio", MessageBoxButtons.YesNo, MessageBoxIcon.Question))
             {
-                if (colaBalanceo.Eliminar(Convert.ToInt32(cliente.Id) - 1))
+                MessageBox.Show("Toco eliminar a: " + cliente.Id);
+                if (cola.Eliminar(Convert.ToInt32(cliente.Id)))
                 {
                     cliente.CancelarServicio();
                     Clientes[IdBusqueda] = cliente;
@@ -166,19 +170,17 @@ namespace Proyecto_Autolavado_Georges
         public void CanceLarServicio(Cliente cliente)
         {
             MainMenu();
-            DialogResult resp;
             if (cliente.ServicioActivo == null)
             {
                 MessageBox.Show("El cliente indicado no se encuentra en un servicio", "Información", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             else
             {
-                int id = Convert.ToInt32(cliente.Id) - 1;
                 if (cliente.ServicioActivo == Servicios.ServiciosDisp[0])
                 {
-                    if (colaBalanceo.FindIndex(id) != 0)
+                    if (colaBalanceo.FindIndex((int)cliente.Id) != 0)
                     {
-                        EliminarColaBalanceo(cliente);
+                        EliminarColaServicio(cliente, colaBalanceo);
                     }
                     else
                     {
@@ -188,43 +190,30 @@ namespace Proyecto_Autolavado_Georges
                         }
                         else
                         {
-                            EliminarColaBalanceo(cliente);
+                            EliminarColaServicio(cliente, colaBalanceo);
                         }
                     }
                 }
                 else if (cliente.ServicioActivo == Servicios.ServiciosDisp[1])
                 {
-                    resp = MessageBox.Show("Está seguro que desea cancelar su servicio?", "Cancelar cambio de aceite", MessageBoxButtons.YesNo, MessageBoxIcon.Information);
-                    if (resp == DialogResult.Yes)
-                    {
-                        if (colaAceite.Eliminar(id))
-                        {
-                            cliente.CancelarServicio();
-                            Clientes[IdBusqueda] = cliente;
-                            MessageBox.Show("Servicio cancelado correctamente", "Operación exitosa", MessageBoxButtons.OK);
-                        }
-                    }
+                    EliminarColaServicio(cliente, colaAceite);
                 }
                 else
                 {
-                    resp = MessageBox.Show("Está seguro que desea cancelar el servicio de autolavado?", "Cancelar servicio", MessageBoxButtons.YesNo, MessageBoxIcon.Information);
-                    if (resp == DialogResult.Yes)
+                    if (cliente.ServicioActivo == Servicios.ServiciosDisp[2])
                     {
-                        if (cliente.ServicioActivo == Servicios.ServiciosDisp[2])
-                        {
-                            colaAspirado.Eliminar(id);
-                        }
-                        else if (cliente.ServicioActivo == Servicios.ServiciosDisp[3])
-                        {
-                            colaLavado.Eliminar(id);
-                        }
-                        else if (cliente.ServicioActivo == Servicios.ServiciosDisp[4])
-                        {
-                            colaSecado.Eliminar(id);
-                        }
-                        cliente.CancelarServicio();
-                        Clientes[IdBusqueda] = cliente;
+                        EliminarColaServicio(cliente, colaAspirado);
                     }
+                    else if (cliente.ServicioActivo == Servicios.ServiciosDisp[3])
+                    {
+                        EliminarColaServicio(cliente, colaLavado);
+                    }
+                    else if (cliente.ServicioActivo == Servicios.ServiciosDisp[4])
+                    {
+                        EliminarColaServicio(cliente, colaSecado);
+                    }
+                    cliente.CancelarServicio();
+                    Clientes[IdBusqueda] = cliente;
                 }
             }
         }
@@ -250,6 +239,17 @@ namespace Proyecto_Autolavado_Georges
             Clientes = Interfaz.LeerDatos();
             Id = Clientes.Count + 1;
             clientsAmountLabel.Text = Convert.ToString(Clientes.Count);
+            tipoCarrocomboBox.SelectedIndex = 0;
+            modificarTipoCarrocomboBox.SelectedIndex = 0;
+            int num = 1;
+            foreach(Cliente client in Clientes)
+            {
+                if (client.Id > num)
+                {
+                    num = Convert.ToInt32(client.Id);
+                }
+            }
+            Id = num;
         }
 
         private void AcceptRegisterButton_Click(object sender, EventArgs e)
@@ -257,7 +257,7 @@ namespace Proyecto_Autolavado_Georges
             Datos dat;
             dat.Nombre = NameTextBox.Text; dat.Apellido = ApellidoTextBox.Text;
             Vehiculo carr;
-            carr.Modelo = ModeloTextBox.Text; carr.Placa = PlacaTextBox.Text; carr.Tipo = TipoTextBox.Text;
+            carr.Modelo = ModeloTextBox.Text; carr.Placa = PlacaTextBox.Text; carr.Tipo = tipoCarrocomboBox.Text;
             string cedula = CedulaComboBox.Text + CedulaTextBox.Text;
 
             Registrar(dat, carr, cedula);
@@ -343,11 +343,11 @@ namespace Proyecto_Autolavado_Georges
             if (string.IsNullOrWhiteSpace(modificarPlacaVehiculoTextBox.Text)) carr.Placa = client.Carro.Placa;
             else carr.Placa = modificarPlacaVehiculoTextBox.Text;
 
-            if (string.IsNullOrWhiteSpace(modificarTipoVehiculoTextBox.Text)) carr.Tipo = client.Carro.Tipo;
-            else carr.Tipo = modificarTipoVehiculoTextBox.Text;
+            if (string.IsNullOrWhiteSpace(modificarTipoCarrocomboBox.Text)) carr.Tipo = client.Carro.Tipo;
+            else carr.Tipo = modificarTipoCarrocomboBox.Text;
 
             DialogResult resp = MessageBox.Show("Está seguro de que desea modificar al cliente\n" +
-                client.Name.Nombre + " " + client.Name.Apellido + "?", "¿Seguro?", MessageBoxButtons.YesNo, MessageBoxIcon.Information);
+                client.Name.Nombre + " " + client.Name.Apellido + "?", "¿Seguro?", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
 
             if (resp == DialogResult.Yes)
             {
@@ -406,7 +406,7 @@ namespace Proyecto_Autolavado_Georges
                 SeleccionarServicio();
                 if (client.ServicioActivo == null)
                 {
-                    if (IngresarColaServicios())
+                    if (IngresarColaServicios(client))
                     {
                         client.RegistrarServicio(Servicio);
                         Clientes[IdBusqueda] = client;
@@ -476,7 +476,7 @@ namespace Proyecto_Autolavado_Georges
             }
             if (pilaCauchos.PilaVacia() && !colaBalanceo.ColaVacia())
             {
-                IdBusqueda = colaBalanceo.Retirar();
+                IdBusqueda = colaBalanceo.Retirar() - 1;
                 Cliente client = Clientes[IdBusqueda];
                 MessageBox.Show("Atendido correctamente el cliente: " + client.Name.Nombre, "Cauchos balanceados", MessageBoxButtons.OK);
                 client.ProcesarServicio();
@@ -505,7 +505,7 @@ namespace Proyecto_Autolavado_Georges
             }
             else
             {
-                IdBusqueda = colaAceite.Retirar();
+                IdBusqueda = colaAceite.Retirar() - 1;
                 Cliente client = Clientes[IdBusqueda];
                 client.ProcesarServicio();
                 Clientes[IdBusqueda] = client;
@@ -525,7 +525,7 @@ namespace Proyecto_Autolavado_Georges
                 Cliente client;
                 if (!colaSecado.ColaVacia())
                 {
-                    IdBusqueda = colaSecado.Retirar();
+                    IdBusqueda = colaSecado.Retirar() - 1;
                     client = Clientes[IdBusqueda];
                     MessageBox.Show("Atendido correctamente el cliente: " + client.Name.Nombre, "Secado realizado", MessageBoxButtons.OK);
                     client.ProcesarServicio();
@@ -539,7 +539,7 @@ namespace Proyecto_Autolavado_Georges
                     MessageBox.Show("Atendido correctamente el cliente: " + client.Name.Nombre, "Lavado realizado", MessageBoxButtons.OK);
                     client.ProcesarServicio();
                     client.RegistrarServicio(Servicios.ServiciosDisp[4]);
-                    colaSecado.Insertar(IdBusqueda);
+                    colaSecado.Insertar(Convert.ToInt32(client.Id));
                     Clientes[IdBusqueda] = client;
                 }
 
@@ -550,7 +550,7 @@ namespace Proyecto_Autolavado_Georges
                     MessageBox.Show("Atendido correctamente el cliente: " + client.Name.Nombre, "Aspirado realizado", MessageBoxButtons.OK);
                     client.ProcesarServicio();
                     client.RegistrarServicio(Servicios.ServiciosDisp[3]);
-                    colaLavado.Insertar(IdBusqueda);
+                    colaLavado.Insertar(Convert.ToInt32(client.Id));
                     Clientes[IdBusqueda] = client;
                 }
                 colaSecadolabel.Text = "Clientes en espera:\n" + colaSecado.GetCount();
@@ -565,6 +565,7 @@ namespace Proyecto_Autolavado_Georges
             if (BuscarID())
             {
                 Cliente client = Clientes[IdBusqueda];
+                MessageBox.Show("Desea eliminar a " + client.Name.Nombre);
                 CanceLarServicio(client);
             }
             else
@@ -573,38 +574,57 @@ namespace Proyecto_Autolavado_Georges
             }
         }
 
+        private Cola<int> CargarAux(Cola<int> cola)
+        {
+            Cola<int> colaAux = new(cola.Size);
+            int[] dat = cola.ObtenerDatos();
+            for(int i = 0; i < cola.GetCount(); i++)
+            {
+                colaAux.Insertar(dat[i]);
+            }
+            return colaAux;
+        }
+
         private void listarClientesbutton_Click(object sender, EventArgs e)
         {
             IngresarServicio Serv = new();
             Serv.ShowDialog();
+            Servicio = Serv.Servicio;
             Serv.Dispose();
+
+
             if (Servicio == Servicios.ServiciosDisp[0])
             {
-                ListaClientes lista = new(Clientes, colaBalanceo);
+                Cola<int> aux = CargarAux(colaBalanceo);
+                ListaClientes lista = new(Clientes, aux);
                 lista.ShowDialog();
                 lista.Dispose();
             }
             else if (Servicio == Servicios.ServiciosDisp[1])
             {
-                ListaClientes lista = new(Clientes, colaAceite);
+                Cola<int> aux = CargarAux(colaAceite);
+                ListaClientes lista = new(Clientes, aux);
                 lista.ShowDialog();
                 lista.Dispose();
             }
             else if (Servicio == Servicios.ServiciosDisp[2])
             {
-                ListaClientes lista = new(Clientes, colaAspirado);
+                Cola<int> aux = CargarAux(colaAspirado);
+                ListaClientes lista = new(Clientes, aux);
                 lista.ShowDialog();
                 lista.Dispose();
             }
             else if (Servicio == Servicios.ServiciosDisp[3])
             {
-                ListaClientes lista = new(Clientes, colaLavado);
+                Cola<int> aux = CargarAux(colaLavado);
+                ListaClientes lista = new(Clientes, aux);
                 lista.ShowDialog();
                 lista.Dispose();
             }
             else if (Servicio == Servicios.ServiciosDisp[4])
             {
-                ListaClientes lista = new(Clientes, colaSecado);
+                Cola<int> aux = CargarAux(colaSecado);
+                ListaClientes lista = new(Clientes, aux);
                 lista.ShowDialog();
                 lista.Dispose();
             }
@@ -616,6 +636,38 @@ namespace Proyecto_Autolavado_Georges
             if (e.CloseReason == CloseReason.UserClosing)
             {
                 Interfaz.GuardarDatos(Clientes);
+            }
+        }
+
+        private void pagarFacturaButton_Click(object sender, EventArgs e)
+        {
+            bool pagado = false;
+            if (BuscarID())
+            {
+                Cliente client = Clientes[IdBusqueda];
+                if (client.ServiciosConsumidos.Count == 0)
+                {
+                    MessageBox.Show("Cliente no posee deuda", "Información", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+                else
+                {
+                    ListaClientes lista = new(client);
+                    lista.ShowDialog();
+                    lista.Dispose();
+                    pagado = lista.Pagado;
+                    if (pagado)
+                    {
+                        client.LimpiarFactura();
+                        Clientes[IdBusqueda] = client;
+                        MessageBox.Show("Factura pagada exitosamente", "Pago realizado", MessageBoxButtons.OK);
+                    }
+                    else
+                    {
+                        {
+                            MessageBox.Show("Pago de factura cancelado", "Pago cancelado", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        }
+                    }
+                }
             }
         }
     }

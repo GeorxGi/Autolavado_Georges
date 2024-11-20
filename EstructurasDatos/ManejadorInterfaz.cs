@@ -125,8 +125,7 @@ public static class Interfaz
                               new JProperty("Cedula", cliente.Cedula),
                               new JProperty("Modelo", cliente.Carro.Modelo),
                               new JProperty("Placa", cliente.Carro.Placa),
-                              new JProperty("Tipo", cliente.Carro.Tipo),
-                              new JProperty("ID", cliente.Id));
+                              new JProperty("Tipo", cliente.Carro.Tipo));
             array.Add(aux);
         }
 
@@ -151,7 +150,7 @@ public static class Interfaz
         {
             string jsonData = File.ReadAllText(DataDirectory);
             JArray jData = new JArray(JArray.Parse(jsonData));
-            int i = 0;
+            uint i = 0;
 
             foreach (JToken item in jData)
             {
@@ -166,10 +165,9 @@ public static class Interfaz
                     Placa = item["Placa"].ToString(),
                     Tipo = item["Tipo"].ToString()
                 };
-                cedula = item["Cedula"].ToString() ;
-                id = (uint)item["ID"];
+                cedula = item["Cedula"].ToString();
 
-                client = new(id, cedula, dat, carr);
+                client = new(++i, cedula, dat, carr);
                 lista.Add(client);
             }            
             

@@ -1,9 +1,11 @@
-﻿namespace Autolavado_GeorgesChakour.Clases
+﻿using System.ComponentModel;
+
+namespace Autolavado_GeorgesChakour.Clases
 {
     public class Cola<T>(uint size)
     {
         #region Atributos
-        private uint Size = size;
+        public uint Size { get; private set; } = size;
         private int Final = -1;
         private T[] Datos = new T[size];
         #endregion
@@ -50,32 +52,28 @@
         {
             if (!ColaVacia())
             {
-                int indice = -1;
-                for(int i = 0; i < Final + 1; i++)
-                {
-                    if (EqualityComparer<T>.Default.Equals(Datos[i], dato))
+                int indice = FindIndex(dato);
+                if (indice >= 0)
                     {
-                        indice = i;
-                        break;
-                    }
-                }
-                if(indice != -1)
-                {
-                    if (indice == 0)
-                    {
-                        Retirar();
-                        return true;
-                    }
-                    else
-                    {
-                        for (int i = indice; i < Final - 1; i++)
+                        if (indice == 0)
                         {
-                            Datos[i] = Datos[i + 1];
+                            Retirar();
+                            return true;
                         }
-                        Final--;
-                        return true;
+                        else if (indice == Final)
+                        {
+                            Final--;
+                        }
+                        else
+                        {
+                            for (int i = indice; i < Final; i++)
+                            {
+                                Datos[i] = Datos[i + 1];
+                            }
+                            Final--;
+                            return true;
+                        }
                     }
-                }
             }
             return false;
         }
@@ -128,6 +126,20 @@
         public int GetCount()
         {
             return Final + 1;
+        }
+
+        /// <summary>
+        /// Crea una copia del objeto para evitar manejos indebidos de memoria
+        /// </summary>
+        /// <returns>Copia exácta de la cola</returns>
+        public Cola<T> Copia()
+        {
+            return (Cola<T>)MemberwiseClone();
+        }
+
+        public T[] ObtenerDatos()
+        {
+            return Datos;
         }
     }
 }

@@ -4,7 +4,7 @@
     /// Lista con todos los servicios que ofrece el autolavado
     /// Balanceo - Aceite - Aspirado - Lavado - Secado
     /// </summary>
-    public static readonly string[] ServiciosDisp = ["Balanceo", "Aceite", "Aspirado", "Lavado", "Secado"];
+    public static readonly string[] ServiciosDisp = ["Balanceo", "Aceite", "Aspirado", "Lavado", "Secado" ];
 }
 
 public readonly struct InterfaceColors
