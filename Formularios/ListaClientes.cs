@@ -55,7 +55,7 @@ namespace Proyecto_Autolavado_Georges.Formularios
                             }
                         }
                     }
-                    for(int d = 0; d < id.Length; d++)
+                    for (int d = 0; d < id.Length; d++)
                     {
                         colaElementos.Insertar(id[d]);
                     }
@@ -82,7 +82,8 @@ namespace Proyecto_Autolavado_Georges.Formularios
                 //dataGridView1.Columns.Add("preciobs", "Precio (Bs)");
                 if (clienteInd.ServiciosConsumidos.Count > 0)
                 {
-                    int i = 0;
+                    uint i = 1;
+                    double total = 0;
                     foreach (string servicio in clienteInd.ServiciosConsumidos)
                     {
                         string servAux = servicio;
@@ -147,8 +148,11 @@ namespace Proyecto_Autolavado_Georges.Formularios
                                 price = 5;
                             }
                         }
-                        dataGridView1.Rows.Add(i + 1, servAux, price, string.Format("{0:0.00}", price * TasaCambio.TasaDolar()));
+                        total += price;
+                        dataGridView1.Rows.Add(i++, servAux, price, string.Format("{0:0.00}", price * TasaCambio.TasaDolar()));
                     }
+                    dataGridView1.Rows.Add();
+                    dataGridView1.Rows.Add("TOTAL", "", total, string.Format("{0:0.00}", total * TasaCambio.TasaDolar()));
                 }
             }
         }

@@ -534,7 +534,7 @@ namespace Proyecto_Autolavado_Georges
 
                 if (!colaLavado.ColaVacia())
                 {
-                    IdBusqueda = colaLavado.Retirar();
+                    IdBusqueda = colaLavado.Retirar() - 1;
                     client = Clientes[IdBusqueda];
                     MessageBox.Show("Atendido correctamente el cliente: " + client.Name.Nombre, "Lavado realizado", MessageBoxButtons.OK);
                     client.ProcesarServicio();
@@ -545,7 +545,7 @@ namespace Proyecto_Autolavado_Georges
 
                 if (!colaAspirado.ColaVacia())
                 {
-                    IdBusqueda = colaAspirado.Retirar();
+                    IdBusqueda = colaAspirado.Retirar() - 1;
                     client = Clientes[IdBusqueda];
                     MessageBox.Show("Atendido correctamente el cliente: " + client.Name.Nombre, "Aspirado realizado", MessageBoxButtons.OK);
                     client.ProcesarServicio();
@@ -565,7 +565,6 @@ namespace Proyecto_Autolavado_Georges
             if (BuscarID())
             {
                 Cliente client = Clientes[IdBusqueda];
-                MessageBox.Show("Desea eliminar a " + client.Name.Nombre);
                 CanceLarServicio(client);
             }
             else
