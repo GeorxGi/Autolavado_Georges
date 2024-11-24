@@ -157,7 +157,6 @@ namespace Proyecto_Autolavado_Georges
         {
             if (DialogResult.Yes == MessageBox.Show("Está seguro que desea cancelar su servicio?", "Cancelar servicio", MessageBoxButtons.YesNo, MessageBoxIcon.Question))
             {
-                MessageBox.Show("Toco eliminar a: " + cliente.Id);
                 if (cola.Eliminar(Convert.ToInt32(cliente.Id)))
                 {
                     cliente.CancelarServicio();
@@ -244,10 +243,7 @@ namespace Proyecto_Autolavado_Georges
             int num = 1;
             foreach(Cliente client in Clientes)
             {
-                if (client.Id > num)
-                {
-                    num = Convert.ToInt32(client.Id);
-                }
+                num++;
             }
             Id = num;
         }
