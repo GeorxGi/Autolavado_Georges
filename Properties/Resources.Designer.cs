@@ -63,6 +63,16 @@ namespace Proyecto_Autolavado_Georges.Properties {
         /// <summary>
         ///   Busca un recurso adaptado de tipo System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap add_car {
+            get {
+                object obj = ResourceManager.GetObject("add_car", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Busca un recurso adaptado de tipo System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap add_user_icon {
             get {
                 object obj = ResourceManager.GetObject("add_user_icon", resourceCulture);

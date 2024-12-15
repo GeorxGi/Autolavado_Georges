@@ -224,18 +224,21 @@
             // 
             // registrarVehículoToolStripMenuItem
             // 
+            registrarVehículoToolStripMenuItem.Image = Properties.Resources.add_car;
             registrarVehículoToolStripMenuItem.Name = "registrarVehículoToolStripMenuItem";
             registrarVehículoToolStripMenuItem.Size = new Size(173, 22);
             registrarVehículoToolStripMenuItem.Text = "Registrar vehículo";
             // 
             // eliminarVehículoToolStripMenuItem
             // 
+            eliminarVehículoToolStripMenuItem.Image = Properties.Resources.delete_icon;
             eliminarVehículoToolStripMenuItem.Name = "eliminarVehículoToolStripMenuItem";
             eliminarVehículoToolStripMenuItem.Size = new Size(173, 22);
             eliminarVehículoToolStripMenuItem.Text = "Eliminar vehículo";
             // 
             // modificarVehículoToolStripMenuItem
             // 
+            modificarVehículoToolStripMenuItem.Image = Properties.Resources.edit_icon;
             modificarVehículoToolStripMenuItem.Name = "modificarVehículoToolStripMenuItem";
             modificarVehículoToolStripMenuItem.Size = new Size(173, 22);
             modificarVehículoToolStripMenuItem.Text = "Modificar vehículo";
