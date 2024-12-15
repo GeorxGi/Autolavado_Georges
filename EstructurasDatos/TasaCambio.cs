@@ -12,14 +12,7 @@ public static class TasaCambio
     /// <returns>Tasa del dolar cargada en memoria</returns>
     public static double TasaDolar()
     {
-        if (File.Exists(DataDirectory))
-        {
-            return Bcv;
-        }
-        else
-        {
-            return 0;
-        }
+        return Bcv;
     }
     /// <summary>
     /// Establece la tasa cambiaria que manejara la aplicacion
@@ -94,13 +87,13 @@ public static class TasaCambio
             }
             else
             {
-                TasaDolar(44.75);
+                TasaDolar(48.75);
                 MessageBox.Show("Hubo un error accediendo a la API, se cargará una tasa genérica", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
         catch (Exception ex)
         {
-            TasaDolar(44.75);
+            TasaDolar(48.75);
             MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
     }

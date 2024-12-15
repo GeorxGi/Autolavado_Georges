@@ -1,20 +1,12 @@
-﻿public static class Servicios
+﻿public enum Servicios
 {
-    /// <summary>
-    /// Lista con todos los servicios que ofrece el autolavado
-    /// Balanceo - Aceite - Aspirado - Lavado - Secado
-    /// </summary>
-    public static readonly string[] ServiciosDisp = ["Balanceo", "Aceite", "Aspirado", "Lavado", "Secado" ];
+    Balanceo,
+    Aceite,
+    Aspirado,
+    Lavado,
+    Secado
 }
 
-public readonly struct InterfaceColors
-{
-    public static readonly Color Negro = Color.FromArgb(51, 51, 51);
-    public static readonly Color Turqueza = Color.FromArgb(72, 229, 194);
-    public static readonly Color Blanco = Color.FromArgb(252, 250, 249);
-    public static readonly Color Arena = Color.FromArgb(243, 211, 189);
-    public static readonly Color Gris = Color.FromArgb(94, 94, 94);
-}
 public struct Vehiculo
 {
     public string Tipo, Modelo, Placa;
@@ -22,4 +14,51 @@ public struct Vehiculo
 public struct Datos
 {
     public string Nombre, Apellido;
+}
+
+public static class Operadores
+{
+    public static float PrecioServicios(Servicios serv, string vehiculo)
+    {
+        if (vehiculo == "Auto")
+        {
+            switch (serv)
+            {
+                case Servicios.Balanceo:
+                    return 25;
+                case Servicios.Aceite:
+                    return 15;
+                case Servicios.Aspirado:
+                    return 4;
+                case Servicios.Lavado:
+                    return 6;
+                case Servicios.Secado:
+                    return 4;
+                default:
+                    return 0;
+            }
+        }
+        else if (vehiculo == "Camioneta")
+        {
+            switch (serv)
+            {
+                case Servicios.Balanceo:
+                    return 35;
+                case Servicios.Aceite:
+                    return 20;
+                case Servicios.Aspirado:
+                    return 6;
+                case Servicios.Lavado:
+                    return 10;
+                case Servicios.Secado:
+                    return 5;
+                default:
+                    return 0;
+            }
+        }
+        else
+        {
+            return 0;
+        }
+    }
 }

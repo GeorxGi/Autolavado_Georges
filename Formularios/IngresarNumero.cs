@@ -10,13 +10,16 @@ using System.Windows.Forms;
 
 namespace Proyecto_Autolavado_Georges.Formularios
 {
-    public partial class IngresarID : Form
+    public partial class IngresarNumero : Form
     {
         public int ReturnID { get; private set; }
         private bool valid = false;
-        public IngresarID()
+        private int Min, Max;
+        public IngresarNumero(string mensaje, int min, int max)
         {
             InitializeComponent();
+            label1.Text = mensaje;
+            Min = min; Max = max;
         }
 
         private void textBox1_KeyPress(object sender, KeyPressEventArgs e)
@@ -28,6 +31,13 @@ namespace Proyecto_Autolavado_Georges.Formularios
                 if (string.IsNullOrWhiteSpace(textBox1.Text) || Convert.ToInt16(textBox1.Text) < 1) ReturnID = -1;
                 else ReturnID = Convert.ToInt32(textBox1.Text);
                 valid = true;
+
+                if(ReturnID < Min || ReturnID > Max)
+                {
+                    ReturnID = -1;
+                    valid = false;
+                }
+
                 this.Close();
             }
             else if (e.KeyChar == (char)27)

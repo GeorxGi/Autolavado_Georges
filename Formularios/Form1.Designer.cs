@@ -28,15 +28,23 @@
         /// </summary>
         private void InitializeComponent()
         {
+            components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
-            eliminarClienteButton = new Button();
             label2 = new Label();
             registrarClienteButton = new Button();
-            modificarClienteButton = new Button();
+            clienteContextMenuStrip = new ContextMenuStrip(components);
+            registrarToolStripMenuItem = new ToolStripMenuItem();
+            toolStripMenuItem2 = new ToolStripSeparator();
+            modificarToolStripMenuItem = new ToolStripMenuItem();
+            eliminarToolStripMenuItem = new ToolStripMenuItem();
+            toolStripMenuItem3 = new ToolStripSeparator();
+            registrarVehículoToolStripMenuItem = new ToolStripMenuItem();
+            eliminarVehículoToolStripMenuItem = new ToolStripMenuItem();
+            modificarVehículoToolStripMenuItem = new ToolStripMenuItem();
             mainLabel = new Label();
             Optionpanel = new Panel();
             pagarFacturaButton = new Button();
-            listarClientesbutton = new Button();
+            listadobutton = new Button();
             cancelarServiciobutton = new Button();
             sistemaAtencionButton = new Button();
             asignarServicioButton = new Button();
@@ -112,6 +120,15 @@
             caucho1pictureBox = new PictureBox();
             realizarBalanceobutton = new Button();
             atenderBalanceoButton = new Button();
+            ListaClientescontextMenuStrip = new ContextMenuStrip(components);
+            clientesRegistradosToolStripMenuItem = new ToolStripMenuItem();
+            porServiciosToolStripMenuItem = new ToolStripMenuItem();
+            pagoContextMenuStrip = new ContextMenuStrip(components);
+            pagarFacturaToolStripMenuItem = new ToolStripMenuItem();
+            toolStripMenuItem1 = new ToolStripSeparator();
+            pagarCuotaToolStripMenuItem = new ToolStripMenuItem();
+            asignarCuotasToolStripMenuItem = new ToolStripMenuItem();
+            clienteContextMenuStrip.SuspendLayout();
             Optionpanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
             panelRegistrar.SuspendLayout();
@@ -137,18 +154,9 @@
             ((System.ComponentModel.ISupportInitialize)caucho3pictureBox).BeginInit();
             ((System.ComponentModel.ISupportInitialize)caucho2pictureBox).BeginInit();
             ((System.ComponentModel.ISupportInitialize)caucho1pictureBox).BeginInit();
+            ListaClientescontextMenuStrip.SuspendLayout();
+            pagoContextMenuStrip.SuspendLayout();
             SuspendLayout();
-            // 
-            // eliminarClienteButton
-            // 
-            eliminarClienteButton.Cursor = Cursors.Hand;
-            eliminarClienteButton.Location = new Point(8, 97);
-            eliminarClienteButton.Name = "eliminarClienteButton";
-            eliminarClienteButton.Size = new Size(110, 35);
-            eliminarClienteButton.TabIndex = 2;
-            eliminarClienteButton.Text = "Eliminar cliente";
-            eliminarClienteButton.UseVisualStyleBackColor = true;
-            eliminarClienteButton.Click += eliminarClienteButton_Click;
             // 
             // label2
             // 
@@ -163,30 +171,79 @@
             // 
             // registrarClienteButton
             // 
+            registrarClienteButton.ContextMenuStrip = clienteContextMenuStrip;
             registrarClienteButton.Cursor = Cursors.Hand;
+            registrarClienteButton.ImageAlign = ContentAlignment.MiddleLeft;
             registrarClienteButton.Location = new Point(8, 13);
             registrarClienteButton.Name = "registrarClienteButton";
             registrarClienteButton.Size = new Size(110, 35);
             registrarClienteButton.TabIndex = 0;
-            registrarClienteButton.Text = "Registrar cliente";
+            registrarClienteButton.Text = "Clientes";
             registrarClienteButton.UseVisualStyleBackColor = true;
             registrarClienteButton.Click += RegisterButton_Click;
             // 
-            // modificarClienteButton
+            // clienteContextMenuStrip
             // 
-            modificarClienteButton.Cursor = Cursors.Hand;
-            modificarClienteButton.Location = new Point(8, 56);
-            modificarClienteButton.Name = "modificarClienteButton";
-            modificarClienteButton.Size = new Size(110, 35);
-            modificarClienteButton.TabIndex = 1;
-            modificarClienteButton.Text = "Modificar cliente";
-            modificarClienteButton.UseVisualStyleBackColor = true;
-            modificarClienteButton.Click += modificarClienteButton_Click;
+            clienteContextMenuStrip.Items.AddRange(new ToolStripItem[] { registrarToolStripMenuItem, toolStripMenuItem2, modificarToolStripMenuItem, eliminarToolStripMenuItem, toolStripMenuItem3, registrarVehículoToolStripMenuItem, eliminarVehículoToolStripMenuItem, modificarVehículoToolStripMenuItem });
+            clienteContextMenuStrip.Name = "clienteContextMenuStrip";
+            clienteContextMenuStrip.Size = new Size(174, 148);
+            // 
+            // registrarToolStripMenuItem
+            // 
+            registrarToolStripMenuItem.Image = Properties.Resources.add_user_icon;
+            registrarToolStripMenuItem.Name = "registrarToolStripMenuItem";
+            registrarToolStripMenuItem.Size = new Size(173, 22);
+            registrarToolStripMenuItem.Text = "Registrar";
+            registrarToolStripMenuItem.Click += registrarToolStripMenuItem_Click;
+            // 
+            // toolStripMenuItem2
+            // 
+            toolStripMenuItem2.Name = "toolStripMenuItem2";
+            toolStripMenuItem2.Size = new Size(170, 6);
+            // 
+            // modificarToolStripMenuItem
+            // 
+            modificarToolStripMenuItem.Image = Properties.Resources.edit_icon;
+            modificarToolStripMenuItem.Name = "modificarToolStripMenuItem";
+            modificarToolStripMenuItem.Size = new Size(173, 22);
+            modificarToolStripMenuItem.Text = "Modificar";
+            modificarToolStripMenuItem.Click += modificarToolStripMenuItem_Click;
+            // 
+            // eliminarToolStripMenuItem
+            // 
+            eliminarToolStripMenuItem.Image = Properties.Resources.delete_icon;
+            eliminarToolStripMenuItem.Name = "eliminarToolStripMenuItem";
+            eliminarToolStripMenuItem.Size = new Size(173, 22);
+            eliminarToolStripMenuItem.Text = "Eliminar";
+            eliminarToolStripMenuItem.Click += eliminarToolStripMenuItem_Click;
+            // 
+            // toolStripMenuItem3
+            // 
+            toolStripMenuItem3.Name = "toolStripMenuItem3";
+            toolStripMenuItem3.Size = new Size(170, 6);
+            // 
+            // registrarVehículoToolStripMenuItem
+            // 
+            registrarVehículoToolStripMenuItem.Name = "registrarVehículoToolStripMenuItem";
+            registrarVehículoToolStripMenuItem.Size = new Size(173, 22);
+            registrarVehículoToolStripMenuItem.Text = "Registrar vehículo";
+            // 
+            // eliminarVehículoToolStripMenuItem
+            // 
+            eliminarVehículoToolStripMenuItem.Name = "eliminarVehículoToolStripMenuItem";
+            eliminarVehículoToolStripMenuItem.Size = new Size(173, 22);
+            eliminarVehículoToolStripMenuItem.Text = "Eliminar vehículo";
+            // 
+            // modificarVehículoToolStripMenuItem
+            // 
+            modificarVehículoToolStripMenuItem.Name = "modificarVehículoToolStripMenuItem";
+            modificarVehículoToolStripMenuItem.Size = new Size(173, 22);
+            modificarVehículoToolStripMenuItem.Text = "Modificar vehículo";
             // 
             // mainLabel
             // 
             mainLabel.Font = new Font("Segoe UI Semibold", 24F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            mainLabel.Location = new Point(134, 4);
+            mainLabel.Location = new Point(134, 0);
             mainLabel.Name = "mainLabel";
             mainLabel.Size = new Size(638, 43);
             mainLabel.TabIndex = 5;
@@ -197,7 +254,7 @@
             // 
             Optionpanel.BackColor = Color.Brown;
             Optionpanel.Controls.Add(pagarFacturaButton);
-            Optionpanel.Controls.Add(listarClientesbutton);
+            Optionpanel.Controls.Add(listadobutton);
             Optionpanel.Controls.Add(cancelarServiciobutton);
             Optionpanel.Controls.Add(sistemaAtencionButton);
             Optionpanel.Controls.Add(asignarServicioButton);
@@ -206,39 +263,38 @@
             Optionpanel.Controls.Add(homeButton);
             Optionpanel.Controls.Add(label2);
             Optionpanel.Controls.Add(registrarClienteButton);
-            Optionpanel.Controls.Add(modificarClienteButton);
-            Optionpanel.Controls.Add(eliminarClienteButton);
-            Optionpanel.Location = new Point(0, -1);
+            Optionpanel.Dock = DockStyle.Left;
+            Optionpanel.Location = new Point(0, 0);
             Optionpanel.Name = "Optionpanel";
-            Optionpanel.Size = new Size(128, 464);
+            Optionpanel.Size = new Size(128, 800);
             Optionpanel.TabIndex = 0;
             // 
             // pagarFacturaButton
             // 
             pagarFacturaButton.Cursor = Cursors.Hand;
-            pagarFacturaButton.Location = new Point(8, 302);
+            pagarFacturaButton.Location = new Point(8, 221);
             pagarFacturaButton.Name = "pagarFacturaButton";
             pagarFacturaButton.Size = new Size(110, 35);
             pagarFacturaButton.TabIndex = 7;
-            pagarFacturaButton.Text = "Pagar factura";
+            pagarFacturaButton.Text = "Pago";
             pagarFacturaButton.UseVisualStyleBackColor = true;
             pagarFacturaButton.Click += pagarFacturaButton_Click;
             // 
-            // listarClientesbutton
+            // listadobutton
             // 
-            listarClientesbutton.Cursor = Cursors.Hand;
-            listarClientesbutton.Location = new Point(8, 261);
-            listarClientesbutton.Name = "listarClientesbutton";
-            listarClientesbutton.Size = new Size(110, 35);
-            listarClientesbutton.TabIndex = 6;
-            listarClientesbutton.Text = "Lista de clientes";
-            listarClientesbutton.UseVisualStyleBackColor = true;
-            listarClientesbutton.Click += listarClientesbutton_Click;
+            listadobutton.Cursor = Cursors.Hand;
+            listadobutton.Location = new Point(8, 180);
+            listadobutton.Name = "listadobutton";
+            listadobutton.Size = new Size(110, 35);
+            listadobutton.TabIndex = 6;
+            listadobutton.Text = "Listado";
+            listadobutton.UseVisualStyleBackColor = true;
+            listadobutton.Click += listarClientesbutton_Click;
             // 
             // cancelarServiciobutton
             // 
             cancelarServiciobutton.Cursor = Cursors.Hand;
-            cancelarServiciobutton.Location = new Point(8, 220);
+            cancelarServiciobutton.Location = new Point(8, 98);
             cancelarServiciobutton.Name = "cancelarServiciobutton";
             cancelarServiciobutton.Size = new Size(110, 35);
             cancelarServiciobutton.TabIndex = 5;
@@ -249,7 +305,7 @@
             // sistemaAtencionButton
             // 
             sistemaAtencionButton.Cursor = Cursors.Hand;
-            sistemaAtencionButton.Location = new Point(8, 179);
+            sistemaAtencionButton.Location = new Point(8, 139);
             sistemaAtencionButton.Name = "sistemaAtencionButton";
             sistemaAtencionButton.Size = new Size(110, 35);
             sistemaAtencionButton.TabIndex = 4;
@@ -260,7 +316,7 @@
             // asignarServicioButton
             // 
             asignarServicioButton.Cursor = Cursors.Hand;
-            asignarServicioButton.Location = new Point(8, 138);
+            asignarServicioButton.Location = new Point(8, 57);
             asignarServicioButton.Name = "asignarServicioButton";
             asignarServicioButton.Size = new Size(110, 35);
             asignarServicioButton.TabIndex = 3;
@@ -1009,6 +1065,63 @@
             atenderBalanceoButton.UseVisualStyleBackColor = true;
             atenderBalanceoButton.Click += atenderBalanceoButton_Click;
             // 
+            // ListaClientescontextMenuStrip
+            // 
+            ListaClientescontextMenuStrip.Items.AddRange(new ToolStripItem[] { clientesRegistradosToolStripMenuItem, porServiciosToolStripMenuItem });
+            ListaClientescontextMenuStrip.Name = "ListaClientescontextMenuStrip";
+            ListaClientescontextMenuStrip.Size = new Size(178, 48);
+            // 
+            // clientesRegistradosToolStripMenuItem
+            // 
+            clientesRegistradosToolStripMenuItem.Image = Properties.Resources.user_icon;
+            clientesRegistradosToolStripMenuItem.Name = "clientesRegistradosToolStripMenuItem";
+            clientesRegistradosToolStripMenuItem.Size = new Size(177, 22);
+            clientesRegistradosToolStripMenuItem.Text = "Clientes registrados";
+            clientesRegistradosToolStripMenuItem.Click += clientesRegistradosToolStripMenuItem_Click;
+            // 
+            // porServiciosToolStripMenuItem
+            // 
+            porServiciosToolStripMenuItem.Image = Properties.Resources.services_icon;
+            porServiciosToolStripMenuItem.Name = "porServiciosToolStripMenuItem";
+            porServiciosToolStripMenuItem.Size = new Size(177, 22);
+            porServiciosToolStripMenuItem.Text = "Por servicios";
+            porServiciosToolStripMenuItem.Click += porServiciosToolStripMenuItem_Click;
+            // 
+            // pagoContextMenuStrip
+            // 
+            pagoContextMenuStrip.Items.AddRange(new ToolStripItem[] { pagarFacturaToolStripMenuItem, toolStripMenuItem1, pagarCuotaToolStripMenuItem, asignarCuotasToolStripMenuItem });
+            pagoContextMenuStrip.Name = "pagoContextMenuStrip";
+            pagoContextMenuStrip.Size = new Size(153, 76);
+            // 
+            // pagarFacturaToolStripMenuItem
+            // 
+            pagarFacturaToolStripMenuItem.Image = Properties.Resources.money_icon;
+            pagarFacturaToolStripMenuItem.Name = "pagarFacturaToolStripMenuItem";
+            pagarFacturaToolStripMenuItem.Size = new Size(152, 22);
+            pagarFacturaToolStripMenuItem.Text = "Pagar factura";
+            pagarFacturaToolStripMenuItem.Click += pagarFacturaToolStripMenuItem_Click;
+            // 
+            // toolStripMenuItem1
+            // 
+            toolStripMenuItem1.Name = "toolStripMenuItem1";
+            toolStripMenuItem1.Size = new Size(149, 6);
+            // 
+            // pagarCuotaToolStripMenuItem
+            // 
+            pagarCuotaToolStripMenuItem.Image = Properties.Resources.money_icon;
+            pagarCuotaToolStripMenuItem.Name = "pagarCuotaToolStripMenuItem";
+            pagarCuotaToolStripMenuItem.Size = new Size(152, 22);
+            pagarCuotaToolStripMenuItem.Text = "Pagar cuota";
+            pagarCuotaToolStripMenuItem.Click += pagarCuotaToolStripMenuItem_Click;
+            // 
+            // asignarCuotasToolStripMenuItem
+            // 
+            asignarCuotasToolStripMenuItem.Image = Properties.Resources.cashea;
+            asignarCuotasToolStripMenuItem.Name = "asignarCuotasToolStripMenuItem";
+            asignarCuotasToolStripMenuItem.Size = new Size(152, 22);
+            asignarCuotasToolStripMenuItem.Text = "Asignar cuotas";
+            asignarCuotasToolStripMenuItem.Click += asignarCuotasToolStripMenuItem_Click;
+            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -1028,6 +1141,7 @@
             Text = "Autolavado";
             FormClosing += Form1_FormClosing;
             Load += Form1_Load;
+            clienteContextMenuStrip.ResumeLayout(false);
             Optionpanel.ResumeLayout(false);
             Optionpanel.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).EndInit();
@@ -1065,14 +1179,14 @@
             ((System.ComponentModel.ISupportInitialize)caucho3pictureBox).EndInit();
             ((System.ComponentModel.ISupportInitialize)caucho2pictureBox).EndInit();
             ((System.ComponentModel.ISupportInitialize)caucho1pictureBox).EndInit();
+            ListaClientescontextMenuStrip.ResumeLayout(false);
+            pagoContextMenuStrip.ResumeLayout(false);
             ResumeLayout(false);
         }
 
         #endregion
-        private Button eliminarClienteButton;
         private Label label2;
         private Button registrarClienteButton;
-        private Button modificarClienteButton;
         private Panel panelRegistrar;
         private Button CleanRegisterButton;
         private Button AcceptRegisterButton;
@@ -1149,8 +1263,25 @@
         private Panel panel18;
         private Button cancelarServiciobutton;
         private Button pagarFacturaButton;
-        private Button listarClientesbutton;
+        private Button listadobutton;
         private ComboBox tipoCarrocomboBox;
         private ComboBox modificarTipoCarrocomboBox;
+        private ContextMenuStrip clienteContextMenuStrip;
+        private ToolStripMenuItem registrarToolStripMenuItem;
+        private ToolStripMenuItem modificarToolStripMenuItem;
+        private ToolStripMenuItem eliminarToolStripMenuItem;
+        private ContextMenuStrip ListaClientescontextMenuStrip;
+        private ToolStripMenuItem clientesRegistradosToolStripMenuItem;
+        private ToolStripMenuItem porServiciosToolStripMenuItem;
+        private ContextMenuStrip pagoContextMenuStrip;
+        private ToolStripMenuItem pagarFacturaToolStripMenuItem;
+        private ToolStripSeparator toolStripMenuItem1;
+        private ToolStripMenuItem pagarCuotaToolStripMenuItem;
+        private ToolStripMenuItem asignarCuotasToolStripMenuItem;
+        private ToolStripSeparator toolStripMenuItem2;
+        private ToolStripSeparator toolStripMenuItem3;
+        private ToolStripMenuItem registrarVehículoToolStripMenuItem;
+        private ToolStripMenuItem eliminarVehículoToolStripMenuItem;
+        private ToolStripMenuItem modificarVehículoToolStripMenuItem;
     }
 }

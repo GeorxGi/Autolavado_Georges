@@ -1,11 +1,12 @@
-﻿namespace Autolavado_GeorgesChakour.Clases
+﻿using Proyecto_Autolavado_Georges;
+
+namespace Autolavado_GeorgesChakour.Clases
 {
-    public class Pila<T>(uint size)
+    class Pila<T>(uint size) : Lista<T>
     {
         #region Atributos
         public uint Size { get; private set; } = size;
         public int top { get; private set; } = -1;
-        private T[] Data = new T[size];
         #endregion
 
         #region Manejadores
@@ -45,7 +46,8 @@
         {
             if (!PilaLlena())
             {
-                Data[++top] = data;
+                Insertar(data);
+                top++;
                 return true;
             }
             else
@@ -55,14 +57,17 @@
 
         }
         /// <summary>
-        /// Retira un elemento de la pila
+        /// Retira el último elemento ingresado de la pila
         /// </summary>
-        /// <returns>el último elemento ingresado en la pila</returns>
+        /// <returns></returns>
         public T? Pop()
         {
             if (!PilaVacia())
             {
-                return Data[top--];
+                T aux = UltimoElemento();
+                Eliminar(aux);
+                top--;
+                return aux;
             }
             else
             {

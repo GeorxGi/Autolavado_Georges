@@ -1,6 +1,6 @@
 ﻿namespace Proyecto_Autolavado_Georges.Formularios
 {
-    partial class IngresarID
+    partial class IngresarNumero
     {
         /// <summary>
         /// Required designer variable.
@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(IngresarID));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(IngresarNumero));
             textBox1 = new TextBox();
             label1 = new Label();
             SuspendLayout();
@@ -51,7 +51,7 @@
             label1.Text = "Ingrese la ID del cliente";
             label1.TextAlign = ContentAlignment.MiddleCenter;
             // 
-            // IngresarID
+            // IngresarNumero
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
@@ -62,10 +62,10 @@
             Icon = (Icon)resources.GetObject("$this.Icon");
             MaximizeBox = false;
             MinimizeBox = false;
-            Name = "IngresarID";
+            Name = "IngresarNumero";
             ShowInTaskbar = false;
             StartPosition = FormStartPosition.CenterParent;
-            Text = "Ingrese ID";
+            Text = "Ingresar";
             FormClosed += IngresarID_FormClosed;
             ResumeLayout(false);
             PerformLayout();

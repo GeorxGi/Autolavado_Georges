@@ -1,10 +1,7 @@
 ﻿using Autolavado_GeorgesChakour.Clases;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using Newtonsoft.Json.Schema;
 using Proyecto_Autolavado_Georges;
-using System.Reflection.Metadata.Ecma335;
-using System.Xml.Linq;
 
 public static class Interfaz
 {
@@ -114,21 +111,16 @@ public static class Interfaz
         e.KeyChar = Char.ToUpper(e.KeyChar);
     }
 
-    public static void GuardarDatos(List<Cliente> clientes)
+    public static void GuardarDatos(Lista<Cliente> clientes)
     {
-        JArray array = new JArray();
-        JObject aux = new();
+        JArray array = [];
+        JObject aux = [];
         foreach (Cliente cliente in clientes)
         {
-            aux = new JObject(new JProperty("Nombre", cliente.Name.Nombre),
-                              new JProperty("Apellido", cliente.Name.Apellido),
-                              new JProperty("Cedula", cliente.Cedula),
-                              new JProperty("Modelo", cliente.Carro.Modelo),
-                              new JProperty("Placa", cliente.Carro.Placa),
-                              new JProperty("Tipo", cliente.Carro.Tipo));
+            aux = cliente.SerializeToJson();
             array.Add(aux);
         }
-
+        
         using (StreamWriter file = new StreamWriter(DataDirectory))
         using (JsonTextWriter writer = new JsonTextWriter(file))
         {
@@ -136,39 +128,22 @@ public static class Interfaz
         }
     }
 
-    public static List<Cliente> LeerDatos()
+    public static Lista<Cliente> LeerDatos()
     {
-        List<Cliente> lista = new();
-        
-        Datos dat;
-        Vehiculo carr;
-        string cedula;
-        uint id;
+        Lista<Cliente> lista = new();
+
         Cliente client;
 
         if (File.Exists(DataDirectory))
         {
             string jsonData = File.ReadAllText(DataDirectory);
-            JArray jData = new JArray(JArray.Parse(jsonData));
-            uint i = 0;
+            JArray jData = new (JArray.Parse(jsonData));
 
             foreach (JToken item in jData)
             {
-                dat = new Datos()
-                {
-                    Nombre = item["Nombre"].ToString(),
-                    Apellido = item["Apellido"].ToString()
-                };
-                carr = new Vehiculo()
-                {
-                    Modelo = item["Modelo"].ToString(),
-                    Placa = item["Placa"].ToString(),
-                    Tipo = item["Tipo"].ToString()
-                };
-                cedula = item["Cedula"].ToString();
-
-                client = new(++i, cedula, dat, carr);
-                lista.Add(client);
+                client = new();
+                client.DeserializeFromJson(item);
+                lista.Insertar(client);
             }            
             
         }
