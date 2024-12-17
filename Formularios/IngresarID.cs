@@ -44,5 +44,13 @@ namespace Proyecto_Autolavado_Georges.Formularios
                 ReturnID = -1;
             }
         }
+
+        private void IngresarID_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Escape)
+            {
+                this.Close();
+            }
+        }
     }
 }

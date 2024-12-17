@@ -44,12 +44,12 @@
             // label1
             // 
             label1.Font = new Font("Segoe UI Semibold", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            label1.Location = new Point(12, 26);
+            label1.Location = new Point(12, 9);
             label1.Name = "label1";
-            label1.Size = new Size(210, 23);
+            label1.Size = new Size(210, 50);
             label1.TabIndex = 1;
-            label1.Text = "Ingrese la ID del cliente";
-            label1.TextAlign = ContentAlignment.MiddleCenter;
+            label1.Text = "Mensaje";
+            label1.TextAlign = ContentAlignment.TopCenter;
             // 
             // IngresarNumero
             // 
@@ -67,6 +67,7 @@
             StartPosition = FormStartPosition.CenterParent;
             Text = "Ingresar";
             FormClosed += IngresarID_FormClosed;
+            KeyDown += IngresarNumero_KeyDown;
             ResumeLayout(false);
             PerformLayout();
         }

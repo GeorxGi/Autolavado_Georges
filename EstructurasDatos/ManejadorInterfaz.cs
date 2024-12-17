@@ -2,6 +2,7 @@
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Proyecto_Autolavado_Georges;
+using System.Security.Cryptography.X509Certificates;
 
 public static class Interfaz
 {
@@ -15,7 +16,18 @@ public static class Interfaz
                 text.Text = "";
             }
         }
-        foreach(TextBox text in pan.Controls.OfType<TextBox>())
+        foreach (TextBox text in pan.Controls.OfType<TextBox>())
+        {
+            text.Text = "";
+        }
+    }
+    public static void LimpiarTextBox(Form form)
+    {
+        foreach(Panel control in form.Controls.OfType<Panel>())
+        {
+            LimpiarTextBox(control);
+        }
+        foreach(TextBox text in form.Controls.OfType<TextBox>())
         {
             text.Text = "";
         }
@@ -51,6 +63,19 @@ public static class Interfaz
             {
                 return false;
             }
+        }
+        return true;
+    }
+
+    public static bool DatosColocados(Form form)
+    {
+        foreach(TextBox control in form.Controls.OfType<TextBox>())
+        {
+            if (string.IsNullOrWhiteSpace(control.Text)) return false;
+        }
+        foreach(ComboBox combo in form.Controls.OfType<ComboBox>())
+        {
+            if (string.IsNullOrWhiteSpace(combo.Text)) return false;
         }
         return true;
     }

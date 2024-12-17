@@ -67,6 +67,7 @@
             StartPosition = FormStartPosition.CenterParent;
             Text = "Ingrese ID";
             FormClosed += IngresarID_FormClosed;
+            KeyDown += IngresarID_KeyDown;
             ResumeLayout(false);
             PerformLayout();
         }

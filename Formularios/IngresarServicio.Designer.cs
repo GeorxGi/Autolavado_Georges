@@ -126,6 +126,7 @@
             StartPosition = FormStartPosition.CenterParent;
             Text = "Ingresar servicio";
             Load += IngresarServicio_Load;
+            KeyDown += IngresarServicio_KeyDown;
             ResumeLayout(false);
         }
 

@@ -89,8 +89,10 @@
             dataGridViewCellStyle3.WrapMode = DataGridViewTriState.True;
             dataGridView1.RowHeadersDefaultCellStyle = dataGridViewCellStyle3;
             dataGridView1.RowHeadersVisible = false;
+            dataGridView1.ShowEditingIcon = false;
             dataGridView1.Size = new Size(794, 345);
             dataGridView1.TabIndex = 0;
+            dataGridView1.KeyDown += dataGridView1_KeyDown;
             // 
             // id
             // 
@@ -112,6 +114,7 @@
             Apellido.Name = "Apellido";
             Apellido.ReadOnly = true;
             Apellido.Resizable = DataGridViewTriState.False;
+            Apellido.SortMode = DataGridViewColumnSortMode.NotSortable;
             // 
             // cedula
             // 
@@ -119,6 +122,7 @@
             cedula.Name = "cedula";
             cedula.ReadOnly = true;
             cedula.Resizable = DataGridViewTriState.False;
+            cedula.SortMode = DataGridViewColumnSortMode.NotSortable;
             // 
             // placaVehiculo
             // 
@@ -126,6 +130,7 @@
             placaVehiculo.Name = "placaVehiculo";
             placaVehiculo.ReadOnly = true;
             placaVehiculo.Resizable = DataGridViewTriState.False;
+            placaVehiculo.SortMode = DataGridViewColumnSortMode.NotSortable;
             // 
             // tipoVehiculo
             // 
@@ -133,6 +138,7 @@
             tipoVehiculo.Name = "tipoVehiculo";
             tipoVehiculo.ReadOnly = true;
             tipoVehiculo.Resizable = DataGridViewTriState.False;
+            tipoVehiculo.SortMode = DataGridViewColumnSortMode.NotSortable;
             // 
             // modeloVehiculo
             // 
@@ -140,6 +146,7 @@
             modeloVehiculo.Name = "modeloVehiculo";
             modeloVehiculo.ReadOnly = true;
             modeloVehiculo.Resizable = DataGridViewTriState.False;
+            modeloVehiculo.SortMode = DataGridViewColumnSortMode.NotSortable;
             // 
             // posicion
             // 
@@ -202,6 +209,7 @@
             StartPosition = FormStartPosition.CenterParent;
             Text = "Lista de clientes";
             Load += ListaClientes_Load;
+            KeyDown += ListaClientes_KeyDown;
             ((System.ComponentModel.ISupportInitialize)dataGridView1).EndInit();
             tableLayoutPanel1.ResumeLayout(false);
             ResumeLayout(false);

@@ -1,4 +1,6 @@
-﻿public enum Servicios
+﻿using Newtonsoft.Json.Linq;
+
+public enum Servicios
 {
     Balanceo,
     Aceite,
@@ -6,11 +8,24 @@
     Lavado,
     Secado
 }
+public enum TipoDeVehiculo
+{
+    Auto,
+    Camioneta
+}
 
 public struct Vehiculo
 {
-    public string Tipo, Modelo, Placa;
+    public TipoDeVehiculo Tipo;
+    public string Modelo, Placa;
+    public Servicios? ServicioUbicado;
 }
+public struct ClienteVehiculo
+{
+    public TipoDeVehiculo modelo;
+    public uint Id;
+}
+
 public struct Datos
 {
     public string Nombre, Apellido;
@@ -18,9 +33,9 @@ public struct Datos
 
 public static class Operadores
 {
-    public static float PrecioServicios(Servicios serv, string vehiculo)
+    public static float PrecioServicios(Servicios serv, TipoDeVehiculo vehiculo)
     {
-        if (vehiculo == "Auto")
+        if (vehiculo == TipoDeVehiculo.Auto)
         {
             switch (serv)
             {
@@ -38,7 +53,7 @@ public static class Operadores
                     return 0;
             }
         }
-        else if (vehiculo == "Camioneta")
+        else if (vehiculo == TipoDeVehiculo.Camioneta)
         {
             switch (serv)
             {

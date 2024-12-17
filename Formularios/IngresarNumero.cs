@@ -1,18 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
-
-namespace Proyecto_Autolavado_Georges.Formularios
+﻿namespace Proyecto_Autolavado_Georges.Formularios
 {
     public partial class IngresarNumero : Form
     {
-        public int ReturnID { get; private set; }
+        public int ReturnNumber { get; private set; }
         private bool valid = false;
         private int Min, Max;
         public IngresarNumero(string mensaje, int min, int max)
@@ -28,13 +18,13 @@ namespace Proyecto_Autolavado_Georges.Formularios
 
             if (e.KeyChar == (char)13)
             {
-                if (string.IsNullOrWhiteSpace(textBox1.Text) || Convert.ToInt16(textBox1.Text) < 1) ReturnID = -1;
-                else ReturnID = Convert.ToInt32(textBox1.Text);
+                if (string.IsNullOrWhiteSpace(textBox1.Text) || Convert.ToInt16(textBox1.Text) < 1) ReturnNumber = -1;
+                else ReturnNumber = Convert.ToInt32(textBox1.Text);
                 valid = true;
 
-                if(ReturnID < Min || ReturnID > Max)
+                if (ReturnNumber < Min || ReturnNumber > Max)
                 {
-                    ReturnID = -1;
+                    ReturnNumber = -1;
                     valid = false;
                 }
 
@@ -51,7 +41,15 @@ namespace Proyecto_Autolavado_Georges.Formularios
         {
             if (!valid && string.IsNullOrWhiteSpace(textBox1.Text))
             {
-                ReturnID = -1;
+                ReturnNumber = -1;
+            }
+        }
+
+        private void IngresarNumero_KeyDown(object sender, KeyEventArgs e)
+        {
+            if(e.KeyCode == Keys.Escape)
+            {
+                this.Close();
             }
         }
     }

@@ -52,5 +52,13 @@ namespace Proyecto_Autolavado_Georges.Formularios
         private void IngresarServicio_Load(object sender, EventArgs e)
         {
         }
+
+        private void IngresarServicio_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Escape)
+            {
+                this.Close();
+            }
+        }
     }
 }

@@ -67,6 +67,7 @@ public static class TasaCambio
                 }
             }
         }
+        MessageBox.Show($"Tasa de hoy: {TasaDolar()}", "Tasa dolar", MessageBoxButtons.OK, MessageBoxIcon.Information); ;
     }
 
     private static void CargarJSON()
