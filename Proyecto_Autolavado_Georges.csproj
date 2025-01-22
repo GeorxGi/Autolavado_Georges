@@ -19,13 +19,13 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Update="Formularios\SeleccionarVehiculo.cs">
+    <Compile Update="Forms\SeleccionarVehiculo.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Update="Formularios\IngresarNumero.cs">
+    <Compile Update="Forms\IngresarNumero.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Update="Formularios\FormularioVehiculo.cs">
+    <Compile Update="Forms\FormularioVehiculo.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Update="Properties\Resources.Designer.cs">

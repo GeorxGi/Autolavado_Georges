@@ -1,28 +1,10 @@
-﻿using System.IO;
-using System.Net.Http;
-using System.Windows;
-using Newtonsoft.Json.Linq;
+﻿using Newtonsoft.Json.Linq;
 
 public static class TasaCambio
 {
-    private static double Bcv;
-    /// <summary>
-    /// Tasa cambiaria que debio ser previamente cargada
-    /// </summary>
-    /// <returns>Tasa del dolar cargada en memoria</returns>
-    public static double TasaDolar()
-    {
-        return Bcv;
-    }
-    /// <summary>
-    /// Establece la tasa cambiaria que manejara la aplicacion
-    /// </summary>
-    /// <param name="tasa">Tasa cambiaria a operar</param>
-    private static void TasaDolar(double tasa)
-    {
-        Bcv = tasa;
-    }
-    private static readonly string DataDirectory = "tasas.json";
+    private const string DataDirectory = "tasas.json";
+
+    public static decimal TasaBcv { get; private set; }
 
     /// <summary>
     /// Comprueba que no hayan más de 12 horas entre la fecha ingresada y la fecha del sistema
@@ -31,19 +13,18 @@ public static class TasaCambio
     /// <returns>Un booleano que indica si han pasado 12 horas</returns>
     public static bool Pasaron12Horas(DateTime lastUpdate)
     {
-        TimeSpan Diff = DateTime.Now - lastUpdate;
-        return Diff.TotalHours > 12;
+        return (DateTime.Now - lastUpdate).TotalHours > 12;
     }
 
     /// <summary>
     /// Carga los datos de la tasa cambiaria a partir de una API y la almacena en memoria
     /// </summary>
-    public static void LoadData()
+    public static async Task LoadData()
     {
-        //Comprueba que el archivo exista
+        //Si el archivo no existe
         if (!File.Exists(DataDirectory))
         {
-            CargarJSON();
+            await CargarJSON();
         }
         else
         {
@@ -58,43 +39,43 @@ public static class TasaCambio
                 //Comprueba que no hayan pasado 12 horas desde la última actualización de tasas
                 if (!Pasaron12Horas(LastUpdate))
                 {
-                    double dollar = Convert.ToDouble(jsonData["price"]);
-                    TasaDolar(dollar);
+                    decimal dollar = Convert.ToDecimal(jsonData["price"]);
+                    TasaBcv = dollar;
                 }
                 else
                 {
-                    CargarJSON();
+                    await CargarJSON();
                 }
             }
         }
-        MessageBox.Show($"Tasa de hoy: {TasaDolar()}", "Tasa dolar", MessageBoxButtons.OK, MessageBoxIcon.Information); ;
+        MessageBox.Show($"Tasa de hoy: {TasaBcv}", "Tasa dolar", MessageBoxButtons.OK, MessageBoxIcon.Information); ;
     }
 
-    private static void CargarJSON()
+    private static async Task CargarJSON()
     {
         try
         {
             HttpClient client = new() { BaseAddress = new Uri("https://pydolarve.org//api/v1/dollar?monitor=bcv") };
 
-            var value = client.GetAsync(client.BaseAddress).Result;
+            HttpResponseMessage value = await client.GetAsync(client.BaseAddress);
             //Comprueba si la solicitud GET fue exitosa
             if (value.IsSuccessStatusCode)
             {
                 dynamic ApiResponse = value.Content.ReadAsStringAsync().Result;
                 File.WriteAllTextAsync(DataDirectory, ApiResponse);
                 MessageBox.Show("Tasas actualizadas correctamente", "Información", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                double dollar = JObject.Parse(ApiResponse)["price"];
-                TasaDolar(dollar);
+                decimal dollar = JObject.Parse(ApiResponse)["price"];
+                TasaBcv = dollar;
             }
             else
             {
-                TasaDolar(48.75);
+                TasaBcv = 54.75M;
                 MessageBox.Show("Hubo un error accediendo a la API, se cargará una tasa genérica", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
         catch (Exception ex)
         {
-            TasaDolar(48.75);
+            TasaBcv = 48.75M;
             MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
     }

@@ -1,42 +1,33 @@
 using Autolavado_GeorgesChakour.Clases;
+using Proyecto_Autolavado_Georges.Classes;
 using Proyecto_Autolavado_Georges.Formularios;
 using Proyecto_Autolavado_Georges.Properties;
-using System.CodeDom;
-using System.Diagnostics;
-using System.DirectoryServices.ActiveDirectory;
-using System.Drawing.Printing;
-
 
 namespace Proyecto_Autolavado_Georges
 {
+    //BUGS:
+    //1- Luego de eliminar un vehiculo del cliente, al intentar registrar uno nuevo, este no se registra
     public partial class Form1 : Form
     {
-        private Cola<(uint, Vehiculo?)> colaAceite = new(5);
-        private Cola<(uint, Vehiculo?)> colaBalanceo = new(5);
+        private readonly Cola<(uint, Vehiculo)> colaAceite = new(5);
+        private readonly Cola<(uint, Vehiculo)> colaBalanceo = new(5);
 
-        private Cola<(uint, Vehiculo?)> colaAspirado = new(10);
-        private Cola<(uint, Vehiculo?)> colaLavado = new(10);
-        private Cola<(uint, Vehiculo?)> colaSecado = new(10);
-        private Pila<bool> pilaCauchos = new(4);
+        private readonly Cola<(uint, Vehiculo)> colaAspirado = new(10);
+        private readonly Cola<(uint, Vehiculo)> colaLavado = new(10);
+        private readonly Cola<(uint, Vehiculo)> colaSecado = new(10);
+        private readonly Pila<bool> pilaCauchos = new(4);
 
         private Lista<Vehiculo> ListaCarroCliente;
 
-        Lista<Cliente> Clientes = new Lista<Cliente>();
+        Lista<Cliente> Clientes = [];
 
         public int Id { get; private set; } = 1;
-        private Servicios? Servicio = null;
         private int IdBusqueda;
 
-        public Cliente BuscarCliente(int ID)
+        public Cliente? BuscarCliente(int ID)
         {
-            foreach (Cliente cliente in Clientes)
-            {
-                if (ID == cliente.Id)
-                {
-                    return cliente;
-                }
-            }
-            return null;
+            //Utiliza una función lambda para buscar el cliente con el ID ingresado
+            return Clientes.BuscarElemento(cliente => cliente.Id == ID);
         }
 
         public void ActualizarCantClientes()
@@ -77,9 +68,6 @@ namespace Proyecto_Autolavado_Georges
                     if (DialogResult.Yes == MessageBox.Show($"El cliente {clien.Name.Nombre} se encuentra deshabilitado, desea habilitarlo nuevamente?",
                         "Información", MessageBoxButtons.YesNo, MessageBoxIcon.Information))
                     {
-                        Cliente mod = clien.Copia();
-                        clien.HabilitarCliente();
-                        Clientes.ModificarElemento(mod, clien);
                         ActualizarCantClientes();
                         MainMenu();
                     }
@@ -104,13 +92,10 @@ namespace Proyecto_Autolavado_Georges
                 {
                     if (!cliente.Enabled)
                     {
-                        if (DialogResult.Yes == MessageBox.Show($"La cedula ingresada pertenece a {cliente.ToString()}," +
+                        if (DialogResult.Yes == MessageBox.Show($"La cedula ingresada pertenece a {cliente}," +
                             $"el cual se encuentra deshabilitado desea habilitarlo nuevamente?",
                             "Información", MessageBoxButtons.YesNo, MessageBoxIcon.Information))
                         {
-                            Cliente mod = cliente.Copia();
-                            cliente.HabilitarCliente();
-                            Clientes.ModificarElemento(mod, cliente);
                             return true;
                         }
                         else
@@ -160,19 +145,14 @@ namespace Proyecto_Autolavado_Georges
             Vehiculo carr;
             if (item.Item2 != null)
             {
-                carr = (Vehiculo)item.Item2;
+                carr = item.Item2;
             }
             else
             {
                 return false;
             }
             client = BuscarCliente(IdBusqueda);
-
-            Cliente mod = client.Copia();
-
             client.ProcesarServicio(carr.Placa);
-
-            Clientes.ModificarElemento(mod, client);
             MessageBox.Show("Atendido correctamente el cliente: " + client.Name.Nombre, "Atendido", MessageBoxButtons.OK);
             return true;
         }
@@ -187,22 +167,19 @@ namespace Proyecto_Autolavado_Georges
             Cliente client;
             (uint, Vehiculo?) item = colaInicial.Retirar();
             IdBusqueda = (int)item.Item1;
-            Vehiculo carr = (Vehiculo)item.Item2;
+            Vehiculo carr;
             if (item.Item2 != null)
             {
-                carr = (Vehiculo)item.Item2;
+                carr = item.Item2;
             }
-            else
-            {
-                return false;
-            }
+            else return false;
+            
             client = BuscarCliente(IdBusqueda);
-            Cliente mod = client.Copia();
+            if (client == null) return false;
+
             client.ProcesarServicio(carr.Placa);
             client.RegistrarServicio(servicio, carr.Placa);
             colaDestino.InsertarCola(item);
-            Clientes.ModificarElemento(mod, client);
-
             MessageBox.Show("Atendido correctamente el cliente: " + client.Name.Nombre, "Atendido", MessageBoxButtons.OK);
             return true;
         }
@@ -240,7 +217,6 @@ namespace Proyecto_Autolavado_Georges
             ingresar.ShowDialog();
             IdBusqueda = ingresar.ReturnID;
             ingresar.Dispose();
-            ingresar = null;
             foreach (Cliente client in Clientes)
             {
                 if (client.Id == IdBusqueda)
@@ -252,39 +228,29 @@ namespace Proyecto_Autolavado_Georges
             return false;
         }
 
-        public bool SeleccionarServicio()
+        public static bool SeleccionarServicio(out Servicios? servicio)
         {
             IngresarServicio ingresar = new();
             ingresar.ShowDialog();
-            Servicio = ingresar.Servicio;
+            servicio = ingresar.Servicio;
             ingresar.Dispose();
-            return Servicio != null;
+            return servicio.HasValue;
         }
 
-        private bool? ColaNoEstaLlena()
+        private bool? ColaNoEstaLlena(Servicios servicio)
         {
-            switch(Servicio)
+            return servicio switch
             {
-                case Servicios.Balanceo:
-                    return !colaBalanceo.ColaLlena();
-
-                case Servicios.Aceite:
-                    return !colaAceite.ColaLlena();
-
-                case Servicios.Aspirado:
-                    return !colaAspirado.ColaLlena();
-
-                case Servicios.Lavado:
-                    return !colaLavado.ColaLlena();
-
-                case Servicios.Secado:
-                    return !colaSecado.ColaLlena();
-                default:
-                    return null;
-            }
+                Servicios.Balanceo =>    !colaBalanceo.ColaLlena(),
+                Servicios.Aceite =>      !colaAceite.ColaLlena(),
+                Servicios.Aspirado =>    !colaAspirado.ColaLlena(),
+                Servicios.Lavado =>      !colaLavado.ColaLlena(),
+                Servicios.Secado =>      !colaSecado.ColaLlena(),
+                _ => null,
+            };
         }
 
-        public bool? IngresarColaServicios(Cliente client, Vehiculo? veh)
+        public bool? IngresarColaServicios(Cliente client, Vehiculo? veh, Servicios servicio)
         {
             if (veh == null)
             {
@@ -292,25 +258,15 @@ namespace Proyecto_Autolavado_Georges
             }
             else
             {
-                switch (Servicio)
+                return servicio switch
                 {
-                    case Servicios.Balanceo:
-                        return colaBalanceo.InsertarCola((client.Id, (Vehiculo)veh));
-
-                    case Servicios.Aceite:
-                        return colaAceite.InsertarCola((client.Id, (Vehiculo)veh));
-
-                    case Servicios.Aspirado:
-                        return colaAspirado.InsertarCola((client.Id, (Vehiculo)veh));
-
-                    case Servicios.Lavado:
-                        return colaLavado.InsertarCola((client.Id, (Vehiculo)veh));
-
-                    case Servicios.Secado:
-                        return colaSecado.InsertarCola((client.Id, (Vehiculo)veh));
-                    default:
-                        return null;
-                }
+                    Servicios.Balanceo =>   colaBalanceo.InsertarCola((client.Id, veh)),
+                    Servicios.Aceite =>     colaAceite.InsertarCola((client.Id, veh)),
+                    Servicios.Aspirado =>   colaAspirado.InsertarCola((client.Id, veh)),
+                    Servicios.Lavado =>     colaLavado.InsertarCola((client.Id, veh)),
+                    Servicios.Secado =>     colaSecado.InsertarCola((client.Id, veh)),
+                    _ => null,
+                };
             }
         }
 
@@ -322,18 +278,15 @@ namespace Proyecto_Autolavado_Georges
             }
             else
             {
-                if (!client.EstaEnServicio())
+                if (!client.HayVehiculoEnServicio())
                 {
                     if (client.DeudaTotal == 0)
                     {
                         if (DialogResult.Yes ==
-                            MessageBox.Show($"Esta seguro de que desea inhabilitar al cliente: {client.ToString()}",
+                            MessageBox.Show($"Esta seguro de que desea inhabilitar al cliente: {client}",
                             "CUIDADO", MessageBoxButtons.YesNo, MessageBoxIcon.Question))
                         {
-                            Cliente mod = client.Copia();
                             client.DeshabilitarCliente();
-
-                            Clientes.ModificarElemento(mod, client);
                             MessageBox.Show("Cliente eliminado exitosamente", "Información", MessageBoxButtons.OK, MessageBoxIcon.Information);
                             ActualizarCantClientes();
                         }
@@ -355,20 +308,17 @@ namespace Proyecto_Autolavado_Georges
             MainMenu();
         }
 
-        public void EliminarColaServicio(Cliente cliente, Cola<(uint, Vehiculo?)> cola, Vehiculo? car)
+        public static void EliminarColaServicio(Cliente cliente, Cola<(uint, Vehiculo?)> cola, Vehiculo? car)
         {
             if (DialogResult.Yes == MessageBox.Show("Está seguro que desea cancelar su servicio?", "Cancelar servicio", MessageBoxButtons.YesNo, MessageBoxIcon.Question))
             {
-                ///AQUI EL ERROR
                 if (cola.EliminarCola((cliente.Id, car)))
                 {
                     if (car != null)
                     {
-                        Vehiculo carr = (Vehiculo)car;
+                        Vehiculo carr = car;
 
-                        Cliente mod = cliente.Copia();
                         cliente.CancelarServicio(carr.Placa);
-                        Clientes.ModificarElemento(mod, cliente);
                         MessageBox.Show("Servicio cancelado exitosamente", "Cancelación exitosa", MessageBoxButtons.OK);
                     }
                 }
@@ -386,7 +336,7 @@ namespace Proyecto_Autolavado_Georges
         public void CancelarServicio(Cliente cliente)
         {
             MainMenu();
-            if (!cliente.EstaEnServicio())
+            if (!cliente.HayVehiculoEnServicio())
             {
                 MessageBox.Show("El cliente indicado no se encuentra en un servicio", "Información", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
@@ -396,8 +346,8 @@ namespace Proyecto_Autolavado_Georges
                 Vehiculo carr;
                 if (car != null)
                 {
-                    carr = (Vehiculo)car;
-                    carr.ServicioUbicado = null;
+                    carr = car;
+                    carr.AsignarServicio(null);
                     switch (cliente.ServicioActual(carr.Placa))
                     {
                         case Servicios.Balanceo:
@@ -438,11 +388,9 @@ namespace Proyecto_Autolavado_Georges
 
         public void PagarFactura()
         {
-            bool pagado = false;
             if (BuscarID())
             {
                 Cliente client = BuscarCliente(IdBusqueda);
-                Cliente mod = client.Copia();
                 if (client.ServiciosConsumidos.Cant == 0)
                 {
                     MessageBox.Show("Cliente no posee deuda", "Información", MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -451,18 +399,14 @@ namespace Proyecto_Autolavado_Georges
                 {
                     ListaClientes lista = new(client);
                     lista.ShowDialog();
-                    pagado = lista.Pagado;
-                    if (pagado)
+                    if (lista.Pagado)
                     {
                         client.LimpiarFactura();
-                        Clientes.ModificarElemento(mod, client);
                         MessageBox.Show("Factura pagada exitosamente", "Pago realizado", MessageBoxButtons.OK);
                     }
                     else
                     {
-                        {
-                            MessageBox.Show("Pago de factura cancelado", "Pago cancelado", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                        }
+                        MessageBox.Show("Pago de factura cancelado", "Pago cancelado", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     }
                     lista.Close();
                 }
@@ -474,7 +418,6 @@ namespace Proyecto_Autolavado_Georges
             if (BuscarID())
             {
                 Cliente client = BuscarCliente(IdBusqueda);
-                Cliente mod = client.Copia();
                 if (client.DeudaTotal != 0 && client.MontoPorCuota == 0)
                 {
                     IngresarNumero ing = new($"Deuda pendiente = ${client.DeudaTotal}\n¿A cuantas cuotas? (1 - 4)", 1, 4);
@@ -488,9 +431,7 @@ namespace Proyecto_Autolavado_Georges
                         MessageBox.Show("Ocurrió un error inesperado", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
 
-                    Clientes.ModificarElemento(mod, client);
                     ing.Dispose();
-                    ing = null;
                 }
                 else
                 {
@@ -515,12 +456,11 @@ namespace Proyecto_Autolavado_Georges
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            TasaCambio.LoadData();
-            TasaCambio.TasaDolar();
+            Thread thread = new(static async () => await TasaCambio.LoadData());
+            thread.Start();
 
             Clientes = Interfaz.LeerDatos();
 
-            int i = 0;
             ActualizarCantClientes();
             Id = Clientes.Cant + 1;
         }
@@ -608,10 +548,8 @@ namespace Proyecto_Autolavado_Georges
             if (DialogResult.Yes == MessageBox.Show("Está seguro de que desea modificar al cliente\n" +
                 client.Name.Nombre + " " + client.Name.Apellido + "?", "¿Seguro?", MessageBoxButtons.YesNo, MessageBoxIcon.Question))
             {
-                Cliente mod = client.Copia();
                 if (client.Modificar(cedula, dat))
                 {
-                    Clientes.ModificarElemento(mod, client);
                     MessageBox.Show("Cliente modificado exitosamente", "Información", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
                 else
@@ -652,8 +590,10 @@ namespace Proyecto_Autolavado_Georges
             MainMenu();
             if (BuscarID())
             {
-                Cliente client = BuscarCliente(IdBusqueda);
-                if (SeleccionarServicio())
+                Cliente? client = BuscarCliente(IdBusqueda);
+                if (client == null) return;
+
+                if (SeleccionarServicio(out Servicios? serv))
                 {
                     if (!client.Enabled)
                     {
@@ -661,22 +601,21 @@ namespace Proyecto_Autolavado_Georges
                     }
                     else
                     {
-                        Cliente mod = client.Copia();
                         Vehiculo? car = client.ElegirVehiculo();
-                        Vehiculo carr;
                         if (car != null)
                         {
-                            carr = (Vehiculo)car;
-
-                            if (!client.EstaEnServicio(carr.Placa))
+                            bool? ClienteEnServicio = client.EstaEnServicio(car.Placa);
+                            if (ClienteEnServicio != null && !ClienteEnServicio.Value)
                             {
-                                bool? opt = ColaNoEstaLlena();
+                                bool? opt = ColaNoEstaLlena(serv.Value);
                                 if (opt == true)
                                 {
-                                    client.RegistrarServicio((Servicios)Servicio, carr.Placa);
-                                    Clientes.ModificarElemento(mod, client);
-                                    carr.ServicioUbicado = (Servicios)Servicio;
-                                    IngresarColaServicios(client, carr);
+                                    if(serv.HasValue)
+                                    {
+                                        client.RegistrarServicio(serv.Value, car.Placa);
+                                        car.AsignarServicio(serv);
+                                        IngresarColaServicios(client, car, serv.Value);
+                                    }
                                 }
                                 else if (opt == false)
                                 {
@@ -736,7 +675,6 @@ namespace Proyecto_Autolavado_Georges
                         }
                         Balanceopanel.Visible = true; Balanceopanel.Enabled = true;
                         form.Dispose();
-                        form = null;
                     }
                     else
                     {
@@ -911,44 +849,21 @@ namespace Proyecto_Autolavado_Georges
 
         private void porServiciosToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            IngresarServicio Serv = new();
-            Serv.ShowDialog();
-            Servicio = Serv.Servicio;
-            Serv.Dispose();
-            Serv = null;
+            SeleccionarServicio(out Servicios? servicio);
 
-            ListaClientes lista;
-
-            switch (Servicio)
+            ListaClientes? lista = servicio switch
             {
-                case Servicios.Balanceo:
-                    lista = new(Clientes, colaBalanceo.Copia());
-                    break;
-
-                case Servicios.Aceite:
-                    lista = new(Clientes, colaAceite.Copia());
-                    break;
-
-                case Servicios.Aspirado:
-                    lista = new(Clientes, colaAspirado.Copia());
-                    break;
-
-                case Servicios.Lavado:
-                    lista = new(Clientes, colaLavado.Copia());
-                    break;
-
-                case Servicios.Secado:
-                    lista = new(Clientes, colaSecado.Copia());
-                    break;
-                default:
-                    lista = null;
-                    break;
-            }
+                Servicios.Balanceo => new(Clientes, colaBalanceo.Copia()),
+                Servicios.Aceite => new(Clientes, colaAceite.Copia()),
+                Servicios.Aspirado => new(Clientes, colaAspirado.Copia()),
+                Servicios.Lavado => new(Clientes, colaLavado.Copia()),
+                Servicios.Secado => new(Clientes, colaSecado.Copia()),
+                _ => null,
+            };
             if (lista != null)
             {
                 lista.ShowDialog();
                 lista.Dispose();
-                lista = null;
             }
         }
 
@@ -957,7 +872,6 @@ namespace Proyecto_Autolavado_Georges
             ListaClientes lista = new(Clientes);
             lista.ShowDialog();
             lista.Dispose();
-            lista = null;
         }
 
         private void pagarFacturaToolStripMenuItem_Click(object sender, EventArgs e)
@@ -975,9 +889,7 @@ namespace Proyecto_Autolavado_Georges
                     if (DialogResult.Yes == MessageBox.Show($"Desea pagar una de las {client.NumeroDeCuotas} cuotas pendientes?\n\nEl monto a pagar" +
                         $" será de ${client.MontoPorCuota}", "Pagar cuota", MessageBoxButtons.YesNo, MessageBoxIcon.Question))
                     {
-                        Cliente mod = client.Copia();
                         client.PagarCuota();
-                        Clientes.ModificarElemento(mod, client);
                         MessageBox.Show("Pago realizado exitosamente!", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     }
                     else
@@ -1001,45 +913,38 @@ namespace Proyecto_Autolavado_Georges
         {
             FormularioVehiculo veh = new();
             veh.ShowDialog();
-            //INGRESAR CARROS
             listaVehiculoslabel.Text += veh.ModeloCarro;
             if (veh.carroNuevo != null)
             {
-                ListaCarroCliente.Insertar((Vehiculo)veh.carroNuevo);
+                ListaCarroCliente.Insertar(veh.carroNuevo);
             }
             veh.Dispose();
-            veh = null;
         }
 
         private void registrarVehículoToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (BuscarID())
             {
-                Cliente mod = BuscarCliente(IdBusqueda);
-                Cliente aux = mod.Copia();
+                Cliente? ClienteNuevoVehiculo = BuscarCliente(IdBusqueda);
+                if (ClienteNuevoVehiculo == null) return;
+
                 FormularioVehiculo form = new();
                 form.ShowDialog();
-                bool find = false;
                 if (form.carroNuevo != null)
                 {
-                    Vehiculo carro = (Vehiculo)form.carroNuevo;
-                    foreach (Cliente cl in Clientes)
+                    foreach (Cliente client in Clientes)
                     {
-                        if (cl.PlacaYaRegistrada(carro.Placa))
+                        if (client.PlacaYaRegistrada(form.carroNuevo.Placa))
                         {
                             MessageBox.Show("La placa ingresada ya se encuentra registrada", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                            find = true;
-                            break;
+                            form.Dispose();
+                            return;
                         }
                     }
-                    if (!find)
-                    {
-                        mod.VehiculosRegistrados.Insertar(carro);
-                        Clientes.ModificarElemento(aux, mod);
-                    }
+                    ClienteNuevoVehiculo.VehiculosRegistrados.Insertar(form.carroNuevo);
+                    MessageBox.Show("Vehiculo registrado exitosamente", "Información", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
                 form.Dispose();
-                form = null;
             }
         }
 
@@ -1047,20 +952,20 @@ namespace Proyecto_Autolavado_Georges
         {
             if (BuscarID())
             {
-                Cliente client = BuscarCliente(IdBusqueda);
+                Cliente? client = BuscarCliente(IdBusqueda);
+                if (client == null) return;
                 SeleccionarVehiculo form = new(client);
                 form.ShowDialog();
                 if(form.VehiculoSeleccionado != null)
                 {
-                    Vehiculo car = (Vehiculo)form.VehiculoSeleccionado;
+                    Vehiculo car = form.VehiculoSeleccionado;
                     if (DialogResult.Yes == MessageBox.Show("Está seguro de que desea eliminar" +
-                        $" la {car.Modelo} de placa {car.Placa} de {client.ToString()}?", "Confirmar", MessageBoxButtons.YesNo, MessageBoxIcon.Information))
+                        $" la {car.Modelo} de placa {car.Placa} de {client}?", "Confirmar", MessageBoxButtons.YesNo, MessageBoxIcon.Information))
                     {
-                        Cliente mod = client.Copia();
-                        client.VehiculosRegistrados.Eliminar(car);
-
-                        Clientes.ModificarElemento(mod, client);
-                        MessageBox.Show("Vehiculo eliminado exitosamente", "Información", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        if(client.VehiculosRegistrados.Eliminar(car))
+                        {
+                            MessageBox.Show("Vehiculo eliminado exitosamente", "Información", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        }
                     }
                 }
             }

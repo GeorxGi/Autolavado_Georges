@@ -51,18 +51,6 @@ namespace Autolavado_GeorgesChakour.Clases
             }
             return false;
         }
-
-        /// <summary>
-        /// Recibe un elemento e indica si este se encuentra o no en la cola
-        /// </summary>
-        /// <param name="dato">Elemento a buscar en la cola</param>
-        /// <returns>booleano que indica si el elemento se encuentra o no en la cola</returns>
-        public bool Find(T dato)
-        {
-            //Para evitar tener que modificar código, al tener la misma funcionalidad, simplemente
-            //llamo a esta funcion
-            return ElementoEnLista(dato);
-        }
         
         /// <summary>
         /// Indica si el elemento indicado se encuentra en el primer indice de la cola

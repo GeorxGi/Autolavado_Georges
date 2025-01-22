@@ -29,7 +29,7 @@ namespace Proyecto_Autolavado_Georges
 
         public void Insertar(T dato)
         {
-            Node<T> nuevoNodo = new Node<T>(dato);
+             Node<T> nuevoNodo = new(dato);
             if (Head == null)
             {
                 Head = nuevoNodo;
@@ -44,46 +44,27 @@ namespace Proyecto_Autolavado_Georges
             }
         }
 
+
         /// <summary>
-        /// Busca el nodo en el que se encuentra el dato ingresado
+        /// Busca el elemento en la lista y lo retorna
         /// </summary>
-        /// <param name="dato">Dato a buscar en la lista</param>
-        /// <returns>Nodo en el que se encuentra el elemento</returns>
-        private Node<T> BuscarNodo(T dato)
+        /// <param name="condicion">Condición o valor con el que buscar el elemento</param>
+        /// <returns>Dato almacenado en lista que cumpla la condición</returns>
+        public T? BuscarElemento(Func<T, bool> condicion)
         {
             Node<T> current = Head;
             while (current != null)
             {
-                if (IComparable.Equals(dato, current.Dato))
+                if (condicion(current.Dato))
                 {
-                    return current;
+                    return current.Dato;
                 }
                 else
                 {
                     current = current.NextNode;
                 }
             }
-            return null;
-        }
-
-        /// <summary>
-        /// Modifica la primera instancia del elemento ingresado y cambia sus datos en base al segundo elemento ingresado
-        /// </summary>
-        /// <param name="dato">Elemento a modificar</param>
-        /// <param name="NuevoDato">Nuevos datos a ingresar</param>
-        /// <returns>Booleano que indica si la operación se realizó correctamente</returns>
-        public bool ModificarElemento(T dato, T NuevoDato)
-        {
-            Node<T> NodeToModify = BuscarNodo(dato);
-            if (NodeToModify != null)
-            {
-                NodeToModify.SetDato(NuevoDato);
-                return true;
-            }
-            else
-            {
-                return false;
-            }
+            return default;
         }
 
         /// <summary>
@@ -104,11 +85,15 @@ namespace Proyecto_Autolavado_Georges
                     {
                         Head = current.NextNode;
                     }
+                    else if(current == Last)
+                    {
+                        Last = Previous;
+                        Last.SetNextNode(null);
+                    }
                     else
                     {
                         Previous.SetNextNode(current.NextNode);
                     }
-                    current = null;
                     GC.Collect();
                     Cant--;
                     return true;
@@ -118,16 +103,6 @@ namespace Proyecto_Autolavado_Georges
                 current = current.NextNode;
             }
             return false;
-        }
-
-        /// <summary>
-        /// Busca el elemento ingresado en la lista
-        /// </summary>
-        /// <param name="dato">Elemento a buscar</param>
-        /// <returns>Booleano que indica si el elemento se encuentra o no cargado</returns>
-        public bool ElementoEnLista(T dato)
-        {
-            return BuscarNodo(dato) != null;
         }
 
         /// <summary>

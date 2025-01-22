@@ -1,5 +1,6 @@
 ﻿using Autolavado_GeorgesChakour.Clases;
 using Newtonsoft.Json.Linq;
+using Proyecto_Autolavado_Georges.Classes;
 using System.Net.WebSockets;
 
 namespace Proyecto_Autolavado_Georges.Formularios

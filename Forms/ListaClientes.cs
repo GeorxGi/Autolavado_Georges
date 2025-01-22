@@ -1,6 +1,5 @@
 ﻿using Autolavado_GeorgesChakour.Clases;
-using System.CodeDom;
-using System.Data;
+using Proyecto_Autolavado_Georges.Classes;
 namespace Proyecto_Autolavado_Georges.Formularios
 {
     public partial class ListaClientes : Form
@@ -63,7 +62,7 @@ namespace Proyecto_Autolavado_Georges.Formularios
                     cliente.Cedula, "", "", "", $"${cliente.DeudaTotal}");
                     foreach (Vehiculo carr in cliente.VehiculosRegistrados)
                     {
-                        dataGridView1.Rows.Add(cliente.Id.ToString(), "||", "||", "||", carr.Placa, carr.Tipo, carr.Modelo, $"${cliente.DeudaTotal}", carr.ServicioUbicado.ToString());
+                        dataGridView1.Rows.Add("", "||", "||", "||", carr.Placa, carr.Tipo, carr.Modelo, "", carr.ServicioUbicado.ToString());
                     }
                 }
             }
@@ -106,7 +105,7 @@ namespace Proyecto_Autolavado_Georges.Formularios
         private void ListaServiciosConsumidos()
         {
             pagarButton.Enabled = true; pagarButton.Visible = true;
-            double price = 0;
+            decimal price = 0;
             dataGridView1.Columns.Clear();
             mainLabel.Text = $"Cliente: {clienteInd.Name.Nombre} {clienteInd.Name.Apellido}  |  Cédula: {clienteInd.Cedula}";
             dataGridView1.Columns.Add("item", "Item");
@@ -117,16 +116,16 @@ namespace Proyecto_Autolavado_Georges.Formularios
             if (clienteInd.ServiciosConsumidos.Cant > 0)
             {
                 uint i = 1;
-                double total = 0;
+                decimal total = 0;
                 foreach ((Servicios, TipoDeVehiculo) servicio in clienteInd.ServiciosConsumidos)
                 {
                     price = Operadores.PrecioServicios(servicio.Item1, servicio.Item2);
                     total += price;
-                    dataGridView1.Rows.Add(i++, servicio.Item1.ToString(), servicio.Item2.ToString(), $"${price}", string.Format("Bs. {0:0.00}", price * TasaCambio.TasaDolar()));
+                    dataGridView1.Rows.Add(i++, servicio.Item1.ToString(), servicio.Item2.ToString(), $"${price}", string.Format("Bs. {0:0.00}", price * TasaCambio.TasaBcv));
                 }
                 dataGridView1.Rows.Add();
-                dataGridView1.Rows.Add("Total", "", "", $"${total}", string.Format("Bs. {0:0.00}", total * TasaCambio.TasaDolar()));
-                dataGridView1.Rows.Add("Monto a pagar", "", "", $"${clienteInd.DeudaTotal}", string.Format("Bs. {0:0.00}", clienteInd.DeudaTotal * TasaCambio.TasaDolar()));
+                dataGridView1.Rows.Add("Total", "", "", $"${total}", string.Format("Bs. {0:0.00}", total * TasaCambio.TasaBcv));
+                dataGridView1.Rows.Add("Monto a pagar", "", "", $"${clienteInd.DeudaTotal}", string.Format("Bs. {0:0.00}", (decimal)clienteInd.DeudaTotal * TasaCambio.TasaBcv));
             }
         }
 

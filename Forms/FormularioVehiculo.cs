@@ -1,4 +1,6 @@
-﻿namespace Proyecto_Autolavado_Georges.Formularios
+﻿using Proyecto_Autolavado_Georges.Classes;
+
+namespace Proyecto_Autolavado_Georges.Formularios
 {
     public partial class FormularioVehiculo : Form
     {
@@ -27,28 +29,16 @@
             this.Close();
         }
 
-        private void FormularioVehiculo_Load(object sender, EventArgs e)
-        {
-            foreach (TipoDeVehiculo mod in Enum.GetValues(typeof(TipoDeVehiculo)))
-            {
-                tipoCarrocomboBox.Items.Add(mod.ToString());
-            }
-            tipoCarrocomboBox.SelectedIndex = 0;
-        }
-
         private void AcceptRegisterButton_Click(object sender, EventArgs e)
         {
             if (Interfaz.DatosColocados(this) && PlacaTextBox.Text.Length > 4)
             {
-                ModeloCarro = $"\n{tipoCarrocomboBox.Text} - {ModeloTextBox.Text}\n{PlacaTextBox.Text}";
-                TipoDeVehiculo car;
-                Enum.TryParse<TipoDeVehiculo>(tipoCarrocomboBox.SelectedItem.ToString(), out car);
-                carroNuevo = new()
-                {
-                    Tipo = car,
-                    Placa = PlacaTextBox.Text,
-                    Modelo = ModeloTextBox.Text
-                };
+                TipoDeVehiculo car = TipoDeVehiculo.Auto;
+                if (autoRadioButton.Checked) car = TipoDeVehiculo.Auto;
+                else if (camionetaRadioButton.Checked) car = TipoDeVehiculo.Camioneta;
+
+                ModeloCarro += $"{car.ToString()} - {ModeloTextBox.Text}\n{PlacaTextBox.Text}\n";
+                carroNuevo = new(car, ModeloTextBox.Text, PlacaTextBox.Text, null);
                 this.Close();
             }
             else
