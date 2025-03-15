@@ -1,6 +1,6 @@
 ﻿namespace Proyecto_Autolavado_Georges.Formularios
 {
-    partial class FormularioVehiculo
+    partial class IngresarModificarVehiculo
     {
         /// <summary>
         /// Required designer variable.
@@ -34,12 +34,12 @@
             ModeloTextBox = new TextBox();
             label6 = new Label();
             PlacaTextBox = new TextBox();
-            CleanRegisterButton = new Button();
-            AcceptRegisterButton = new Button();
             pictureBox1 = new PictureBox();
             pictureBox2 = new PictureBox();
             autoRadioButton = new RadioButton();
             camionetaRadioButton = new RadioButton();
+            acceptRegisterRoundButton = new Proyecto_Autolavado_Georges.Clases.CustomFormControls.RoundButton();
+            CancelRoundButton = new Proyecto_Autolavado_Georges.Clases.CustomFormControls.RoundButton();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
             ((System.ComponentModel.ISupportInitialize)pictureBox2).BeginInit();
             SuspendLayout();
@@ -100,34 +100,6 @@
             PlacaTextBox.TabIndex = 3;
             PlacaTextBox.KeyPress += PlacaTextBox_KeyPress;
             // 
-            // CleanRegisterButton
-            // 
-            CleanRegisterButton.BackColor = Color.Crimson;
-            CleanRegisterButton.Cursor = Cursors.Hand;
-            CleanRegisterButton.Font = new Font("Arial Black", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            CleanRegisterButton.ForeColor = SystemColors.Control;
-            CleanRegisterButton.Location = new Point(208, 260);
-            CleanRegisterButton.Name = "CleanRegisterButton";
-            CleanRegisterButton.Size = new Size(110, 35);
-            CleanRegisterButton.TabIndex = 5;
-            CleanRegisterButton.Text = "Cancelar";
-            CleanRegisterButton.UseVisualStyleBackColor = false;
-            CleanRegisterButton.Click += CleanRegisterButton_Click;
-            // 
-            // AcceptRegisterButton
-            // 
-            AcceptRegisterButton.BackColor = Color.PaleGreen;
-            AcceptRegisterButton.Cursor = Cursors.Hand;
-            AcceptRegisterButton.Font = new Font("Arial Black", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            AcceptRegisterButton.Location = new Point(12, 260);
-            AcceptRegisterButton.Name = "AcceptRegisterButton";
-            AcceptRegisterButton.Size = new Size(110, 35);
-            AcceptRegisterButton.TabIndex = 4;
-            AcceptRegisterButton.Text = "Aceptar";
-            AcceptRegisterButton.UseCompatibleTextRendering = true;
-            AcceptRegisterButton.UseVisualStyleBackColor = false;
-            AcceptRegisterButton.Click += AcceptRegisterButton_Click;
-            // 
             // pictureBox1
             // 
             pictureBox1.Image = Properties.Resources.camioneta_icon;
@@ -172,17 +144,57 @@
             camionetaRadioButton.Text = "Camioneta";
             camionetaRadioButton.UseVisualStyleBackColor = true;
             // 
-            // FormularioVehiculo
+            // acceptRegisterRoundButton
+            // 
+            acceptRegisterRoundButton.BackColor = Color.Brown;
+            acceptRegisterRoundButton.BorderColor = SystemColors.ActiveCaption;
+            acceptRegisterRoundButton.BorderRadius = 10;
+            acceptRegisterRoundButton.BorderSize = 0;
+            acceptRegisterRoundButton.Cursor = Cursors.Hand;
+            acceptRegisterRoundButton.FlatStyle = FlatStyle.Flat;
+            acceptRegisterRoundButton.Font = new Font("Verdana", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            acceptRegisterRoundButton.ForeColor = Color.White;
+            acceptRegisterRoundButton.IsFilledButton = true;
+            acceptRegisterRoundButton.Location = new Point(12, 255);
+            acceptRegisterRoundButton.Name = "acceptRegisterRoundButton";
+            acceptRegisterRoundButton.Size = new Size(110, 40);
+            acceptRegisterRoundButton.TabIndex = 4;
+            acceptRegisterRoundButton.Tag = "";
+            acceptRegisterRoundButton.Text = "Aceptar";
+            acceptRegisterRoundButton.UseVisualStyleBackColor = false;
+            acceptRegisterRoundButton.Click += AcceptRegisterButton_Click;
+            // 
+            // CancelRoundButton
+            // 
+            CancelRoundButton.BackColor = SystemColors.Control;
+            CancelRoundButton.BorderColor = Color.Brown;
+            CancelRoundButton.BorderRadius = 10;
+            CancelRoundButton.BorderSize = 2;
+            CancelRoundButton.Cursor = Cursors.Hand;
+            CancelRoundButton.FlatStyle = FlatStyle.Flat;
+            CancelRoundButton.Font = new Font("Verdana", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            CancelRoundButton.ForeColor = Color.Brown;
+            CancelRoundButton.IsFilledButton = false;
+            CancelRoundButton.Location = new Point(208, 255);
+            CancelRoundButton.Name = "CancelRoundButton";
+            CancelRoundButton.Size = new Size(110, 40);
+            CancelRoundButton.TabIndex = 5;
+            CancelRoundButton.Tag = "";
+            CancelRoundButton.Text = "Cancelar";
+            CancelRoundButton.UseVisualStyleBackColor = false;
+            CancelRoundButton.Click += cancelButton_Click;
+            // 
+            // IngresarModificarVehiculo
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(330, 307);
+            Controls.Add(CancelRoundButton);
+            Controls.Add(acceptRegisterRoundButton);
             Controls.Add(camionetaRadioButton);
             Controls.Add(autoRadioButton);
             Controls.Add(pictureBox2);
             Controls.Add(pictureBox1);
-            Controls.Add(CleanRegisterButton);
-            Controls.Add(AcceptRegisterButton);
             Controls.Add(PlacaTextBox);
             Controls.Add(label6);
             Controls.Add(ModeloTextBox);
@@ -192,11 +204,12 @@
             FormBorderStyle = FormBorderStyle.Fixed3D;
             MaximizeBox = false;
             MinimizeBox = false;
-            Name = "FormularioVehiculo";
+            Name = "IngresarModificarVehiculo";
             ShowIcon = false;
             ShowInTaskbar = false;
             StartPosition = FormStartPosition.CenterParent;
             Text = "Vehiculo";
+            Load += IngresarModificarVehiculo_Load;
             KeyDown += FormularioVehiculo_KeyDown;
             ((System.ComponentModel.ISupportInitialize)pictureBox1).EndInit();
             ((System.ComponentModel.ISupportInitialize)pictureBox2).EndInit();
@@ -212,11 +225,11 @@
         private TextBox ModeloTextBox;
         private Label label6;
         private TextBox PlacaTextBox;
-        private Button CleanRegisterButton;
-        private Button AcceptRegisterButton;
         private PictureBox pictureBox1;
         private PictureBox pictureBox2;
         private RadioButton autoRadioButton;
         private RadioButton camionetaRadioButton;
+        private Clases.CustomFormControls.RoundButton acceptRegisterRoundButton;
+        private Clases.CustomFormControls.RoundButton CancelRoundButton;
     }
 }

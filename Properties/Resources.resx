@@ -139,14 +139,17 @@
   <data name="edit_icon" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\edit_icon.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="carro_icon" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\carro_icon1.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="user_icon" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\user_icon.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="cashea" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\cashea.jpeg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
   <data name="caucho_listo" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\caucho_listo.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="color_picker_icon" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\color_picker_icon.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="Users" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Users.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
@@ -157,7 +160,10 @@
   <data name="caucho_faltante" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\caucho_faltante.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="carro_icon" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\carro_icon1.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="ui_icon" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\ui_icon.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="info_icon" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\info_icon.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
 </root>

@@ -28,95 +28,145 @@
         /// </summary>
         private void InitializeComponent()
         {
-            secadoButton = new Button();
             label1 = new Label();
-            lavadoButton = new Button();
-            aspiradoButton = new Button();
-            aceiteButton = new Button();
-            balanceoButton = new Button();
+            SecadoRoundButton = new Proyecto_Autolavado_Georges.Clases.CustomFormControls.RoundButton();
+            LavadoRoundButton = new Proyecto_Autolavado_Georges.Clases.CustomFormControls.RoundButton();
+            AspiradoRoundButton = new Proyecto_Autolavado_Georges.Clases.CustomFormControls.RoundButton();
+            CambioAceiteRoundButton = new Proyecto_Autolavado_Georges.Clases.CustomFormControls.RoundButton();
+            BalanceoRoundButton = new Proyecto_Autolavado_Georges.Clases.CustomFormControls.RoundButton();
             SuspendLayout();
-            // 
-            // secadoButton
-            // 
-            secadoButton.Cursor = Cursors.Hand;
-            secadoButton.Dock = DockStyle.Bottom;
-            secadoButton.Location = new Point(0, 265);
-            secadoButton.Name = "secadoButton";
-            secadoButton.Size = new Size(187, 50);
-            secadoButton.TabIndex = 4;
-            secadoButton.Text = "Secado";
-            secadoButton.UseVisualStyleBackColor = true;
-            secadoButton.Click += secadoButton_Click;
             // 
             // label1
             // 
-            label1.Font = new Font("Segoe UI Semibold", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            label1.Location = new Point(2, 9);
+            label1.Font = new Font("Verdana", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            label1.Location = new Point(2, 4);
             label1.Name = "label1";
             label1.Size = new Size(185, 53);
             label1.TabIndex = 2;
-            label1.Text = "Seleccione el servicio\r\ndeseado";
+            label1.Text = "Seleccione un servicio";
             label1.TextAlign = ContentAlignment.MiddleCenter;
             // 
-            // lavadoButton
+            // SecadoRoundButton
             // 
-            lavadoButton.Cursor = Cursors.Hand;
-            lavadoButton.Dock = DockStyle.Bottom;
-            lavadoButton.Location = new Point(0, 215);
-            lavadoButton.Name = "lavadoButton";
-            lavadoButton.Size = new Size(187, 50);
-            lavadoButton.TabIndex = 3;
-            lavadoButton.Text = "Lavado";
-            lavadoButton.UseVisualStyleBackColor = true;
-            lavadoButton.Click += lavadoButton_Click;
+            SecadoRoundButton.BackColor = SystemColors.Control;
+            SecadoRoundButton.BorderColor = Color.Brown;
+            SecadoRoundButton.BorderRadius = 10;
+            SecadoRoundButton.BorderSize = 2;
+            SecadoRoundButton.Cursor = Cursors.Hand;
+            SecadoRoundButton.Dock = DockStyle.Bottom;
+            SecadoRoundButton.FlatStyle = FlatStyle.Flat;
+            SecadoRoundButton.Font = new Font("Verdana", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            SecadoRoundButton.ForeColor = Color.Brown;
+            SecadoRoundButton.IsFilledButton = false;
+            SecadoRoundButton.Location = new Point(0, 264);
+            SecadoRoundButton.Name = "SecadoRoundButton";
+            SecadoRoundButton.Size = new Size(187, 51);
+            SecadoRoundButton.TabIndex = 4;
+            SecadoRoundButton.Tag = "";
+            SecadoRoundButton.Text = "Secado";
+            SecadoRoundButton.UseVisualStyleBackColor = false;
+            SecadoRoundButton.Click += secadoButton_Click;
+            SecadoRoundButton.KeyDown += IngresarServicio_KeyDown;
             // 
-            // aspiradoButton
+            // LavadoRoundButton
             // 
-            aspiradoButton.Cursor = Cursors.Hand;
-            aspiradoButton.Dock = DockStyle.Bottom;
-            aspiradoButton.Location = new Point(0, 165);
-            aspiradoButton.Name = "aspiradoButton";
-            aspiradoButton.Size = new Size(187, 50);
-            aspiradoButton.TabIndex = 2;
-            aspiradoButton.Text = "Aspirado";
-            aspiradoButton.UseVisualStyleBackColor = true;
-            aspiradoButton.Click += aspiradoButton_Click;
+            LavadoRoundButton.BackColor = SystemColors.Control;
+            LavadoRoundButton.BorderColor = Color.Brown;
+            LavadoRoundButton.BorderRadius = 10;
+            LavadoRoundButton.BorderSize = 2;
+            LavadoRoundButton.Cursor = Cursors.Hand;
+            LavadoRoundButton.Dock = DockStyle.Bottom;
+            LavadoRoundButton.FlatStyle = FlatStyle.Flat;
+            LavadoRoundButton.Font = new Font("Verdana", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            LavadoRoundButton.ForeColor = Color.Brown;
+            LavadoRoundButton.IsFilledButton = false;
+            LavadoRoundButton.Location = new Point(0, 213);
+            LavadoRoundButton.Name = "LavadoRoundButton";
+            LavadoRoundButton.Size = new Size(187, 51);
+            LavadoRoundButton.TabIndex = 3;
+            LavadoRoundButton.Tag = "";
+            LavadoRoundButton.Text = "Lavado";
+            LavadoRoundButton.UseVisualStyleBackColor = false;
+            LavadoRoundButton.Click += lavadoButton_Click;
+            LavadoRoundButton.KeyDown += IngresarServicio_KeyDown;
             // 
-            // aceiteButton
+            // AspiradoRoundButton
             // 
-            aceiteButton.Cursor = Cursors.Hand;
-            aceiteButton.Dock = DockStyle.Bottom;
-            aceiteButton.Location = new Point(0, 115);
-            aceiteButton.Name = "aceiteButton";
-            aceiteButton.Size = new Size(187, 50);
-            aceiteButton.TabIndex = 1;
-            aceiteButton.Text = "Cambio de aceite";
-            aceiteButton.UseVisualStyleBackColor = true;
-            aceiteButton.Click += aceiteButton_Click;
+            AspiradoRoundButton.BackColor = SystemColors.Control;
+            AspiradoRoundButton.BorderColor = Color.Brown;
+            AspiradoRoundButton.BorderRadius = 10;
+            AspiradoRoundButton.BorderSize = 2;
+            AspiradoRoundButton.Cursor = Cursors.Hand;
+            AspiradoRoundButton.Dock = DockStyle.Bottom;
+            AspiradoRoundButton.FlatStyle = FlatStyle.Flat;
+            AspiradoRoundButton.Font = new Font("Verdana", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            AspiradoRoundButton.ForeColor = Color.Brown;
+            AspiradoRoundButton.IsFilledButton = false;
+            AspiradoRoundButton.Location = new Point(0, 162);
+            AspiradoRoundButton.Name = "AspiradoRoundButton";
+            AspiradoRoundButton.Size = new Size(187, 51);
+            AspiradoRoundButton.TabIndex = 2;
+            AspiradoRoundButton.Tag = "";
+            AspiradoRoundButton.Text = "Aspirado";
+            AspiradoRoundButton.UseVisualStyleBackColor = false;
+            AspiradoRoundButton.Click += aspiradoButton_Click;
+            AspiradoRoundButton.KeyDown += IngresarServicio_KeyDown;
             // 
-            // balanceoButton
+            // CambioAceiteRoundButton
             // 
-            balanceoButton.Cursor = Cursors.Hand;
-            balanceoButton.Dock = DockStyle.Bottom;
-            balanceoButton.Location = new Point(0, 65);
-            balanceoButton.Name = "balanceoButton";
-            balanceoButton.Size = new Size(187, 50);
-            balanceoButton.TabIndex = 0;
-            balanceoButton.Text = "Balanceo";
-            balanceoButton.UseVisualStyleBackColor = true;
-            balanceoButton.Click += balanceoButton_Click;
+            CambioAceiteRoundButton.BackColor = SystemColors.Control;
+            CambioAceiteRoundButton.BorderColor = Color.Brown;
+            CambioAceiteRoundButton.BorderRadius = 10;
+            CambioAceiteRoundButton.BorderSize = 2;
+            CambioAceiteRoundButton.Cursor = Cursors.Hand;
+            CambioAceiteRoundButton.Dock = DockStyle.Bottom;
+            CambioAceiteRoundButton.FlatStyle = FlatStyle.Flat;
+            CambioAceiteRoundButton.Font = new Font("Verdana", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            CambioAceiteRoundButton.ForeColor = Color.Brown;
+            CambioAceiteRoundButton.IsFilledButton = false;
+            CambioAceiteRoundButton.Location = new Point(0, 111);
+            CambioAceiteRoundButton.Name = "CambioAceiteRoundButton";
+            CambioAceiteRoundButton.Size = new Size(187, 51);
+            CambioAceiteRoundButton.TabIndex = 1;
+            CambioAceiteRoundButton.Tag = "";
+            CambioAceiteRoundButton.Text = "Cambio de aceite";
+            CambioAceiteRoundButton.UseVisualStyleBackColor = false;
+            CambioAceiteRoundButton.Click += aceiteButton_Click;
+            CambioAceiteRoundButton.KeyDown += IngresarServicio_KeyDown;
+            // 
+            // BalanceoRoundButton
+            // 
+            BalanceoRoundButton.BackColor = SystemColors.Control;
+            BalanceoRoundButton.BorderColor = Color.Brown;
+            BalanceoRoundButton.BorderRadius = 10;
+            BalanceoRoundButton.BorderSize = 2;
+            BalanceoRoundButton.Cursor = Cursors.Hand;
+            BalanceoRoundButton.Dock = DockStyle.Bottom;
+            BalanceoRoundButton.FlatStyle = FlatStyle.Flat;
+            BalanceoRoundButton.Font = new Font("Verdana", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            BalanceoRoundButton.ForeColor = Color.Brown;
+            BalanceoRoundButton.IsFilledButton = false;
+            BalanceoRoundButton.Location = new Point(0, 60);
+            BalanceoRoundButton.Name = "BalanceoRoundButton";
+            BalanceoRoundButton.Size = new Size(187, 51);
+            BalanceoRoundButton.TabIndex = 0;
+            BalanceoRoundButton.Tag = "";
+            BalanceoRoundButton.Text = "Balanceo";
+            BalanceoRoundButton.UseVisualStyleBackColor = false;
+            BalanceoRoundButton.Click += balanceoButton_Click;
+            BalanceoRoundButton.KeyDown += IngresarServicio_KeyDown;
             // 
             // IngresarServicio
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(187, 315);
-            Controls.Add(balanceoButton);
-            Controls.Add(aceiteButton);
-            Controls.Add(aspiradoButton);
-            Controls.Add(lavadoButton);
+            Controls.Add(BalanceoRoundButton);
+            Controls.Add(CambioAceiteRoundButton);
+            Controls.Add(AspiradoRoundButton);
+            Controls.Add(LavadoRoundButton);
+            Controls.Add(SecadoRoundButton);
             Controls.Add(label1);
-            Controls.Add(secadoButton);
             FormBorderStyle = FormBorderStyle.Fixed3D;
             MaximizeBox = false;
             MinimizeBox = false;
@@ -131,12 +181,14 @@
         }
 
         #endregion
-
-        private Button secadoButton;
         private Label label1;
         private Button lavadoButton;
         private Button aspiradoButton;
         private Button aceiteButton;
-        private Button balanceoButton;
+        private Clases.CustomFormControls.RoundButton SecadoRoundButton;
+        private Clases.CustomFormControls.RoundButton LavadoRoundButton;
+        private Clases.CustomFormControls.RoundButton CambioAceiteRoundButton;
+        private Clases.CustomFormControls.RoundButton BalanceoRoundButton;
+        private Clases.CustomFormControls.RoundButton AspiradoRoundButton;
     }
 }

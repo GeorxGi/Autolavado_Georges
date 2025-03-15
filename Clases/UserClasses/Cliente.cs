@@ -1,7 +1,6 @@
 ﻿using Newtonsoft.Json.Linq;
-using Proyecto_Autolavado_Georges;
-using Proyecto_Autolavado_Georges.Classes;
-using Proyecto_Autolavado_Georges.Formularios;
+using Proyecto_Autolavado_Georges.Clases.DataClasses;
+using Proyecto_Autolavado_Georges.Clases.DataHandlers;
 
 public enum TipoDeVehiculo
 {
@@ -14,21 +13,21 @@ public struct Datos
     public string Nombre, Apellido;
 }
 
-namespace Autolavado_GeorgesChakour.Clases
-{   
+namespace Proyecto_Autolavado_Georges.Clases.UserClasses
+{
     public class Cliente
     {
         public Datos Name { get; private set; }
         public string Cedula { get; private set; }
-        public Lista<Vehiculo> VehiculosRegistrados { get; private set; }
+        public CustomLinkedList<Vehiculo> VehiculosRegistrados { get; private set; }
         public uint Id { get; private set; }
         public bool Enabled { get; private set; }
-        public float DeudaTotal { get; private set; }
+        public decimal DeudaTotal { get; private set; }
 
-        public float MontoPorCuota { get; private set; }
+        public decimal MontoPorCuota { get; private set; }
         public uint NumeroDeCuotas {  get; private set; }
 
-        public Lista<(Servicios, TipoDeVehiculo)> ServiciosConsumidos { get; private set; }
+        public CustomLinkedList<(Services, decimal)> ServiciosConsumidos { get; private set; }
 
         public Cliente()
         {
@@ -44,7 +43,7 @@ namespace Autolavado_GeorgesChakour.Clases
         /// <param name="cedula">Cedula de identidad del cliente</param>
         /// <param name="datos">Estructura que contiene el nombre y apellido del cliente</param>
         /// <param name="carros">Lista que contiene todos los carros que posee el cliente</param>
-        public Cliente(uint id, string cedula, Datos datos, Lista<Vehiculo> carros)
+        public Cliente(uint id, string cedula, Datos datos, DataClasses.CustomLinkedList<Vehiculo> carros)
         {
             Id = id;
             Cedula = cedula;
@@ -65,12 +64,12 @@ namespace Autolavado_GeorgesChakour.Clases
         {
             foreach (Vehiculo veh in VehiculosRegistrados)
             {
-                if (veh.ServicioUbicado != null)
+                if (veh.ServicioUbicado.HasValue)
                 {
                     return false;
                 }
             }
-            if(ServiciosConsumidos.Cant == 0)
+            if(ServiciosConsumidos.Count == 0)
             {
                 Cedula = cedula;
                 Name = datos;
@@ -80,85 +79,37 @@ namespace Autolavado_GeorgesChakour.Clases
         }
 
         /// <summary>
-        /// Ingresa el servicio actual en los datos del cliente
-        /// </summary>
-        /// <param name="servicio">Servicio a ingresar, debe pertenecer a la lista de servicios disponibles</param>
-        /// <returns>booleano que indica si el servicio se registró correctamente</returns>
-        public bool RegistrarServicio(Servicios servicio, string placa)
-        {
-            Vehiculo? mod = VehiculosRegistrados.BuscarElemento(V => V.Placa == placa);
-            if(mod != null)
-            {
-                mod.AsignarServicio(servicio);
-                return true;
-            }
-            return false;
-        }
-        /// <summary>
-        /// Comprueba si el vehiculo ingresado está actualmente en un servicio, retorna nulo si no se encontro un vehiculo
-        /// con la placa ingresada
-        /// </summary>
-        /// <param name="placa">Placa del vehiculo a buscar</param>
-        /// <returns>Booleano que indica si el vehiculo se encuentra o no en un servicio</returns>
-        public bool? EstaEnServicio(string placa)
-        {
-            Vehiculo? aux = VehiculosRegistrados.BuscarElemento(V => V.Placa == placa);
-            if(aux != null)
-            {
-                return aux.ServicioUbicado != null;
-            }
-            return null;
-        }
-
-        /// <summary>
         /// Comprueba si alguno de los vehiculos del cliente se encuentra en un servicio
         /// </summary>
         /// <returns>Booleano que indica si algún vehículo está en servicio</returns>
         public bool HayVehiculoEnServicio()
         {
-            return VehiculosRegistrados.BuscarElemento(V => V.ServicioUbicado != null) != null;
+            return VehiculosRegistrados.SearchElementByCondition(V => V.ServicioUbicado.HasValue) != null;
         }
 
         /// <summary>
-        /// Busca entre los vehiculos registrados y devuelve el servicio en el que se encuentre el vehiculo indicado
+        /// Procesa el servicio en el que se encuentre actualmente el vehiculo del cliente
+        /// (Si el vehiculo ingresado no pertenece al cliente se genera una excepción)
         /// </summary>
-        /// <param name="placa">Placa del vehiculo a buscar</param>
-        /// <returns>Servicio en el que se encuentra el vehiculo indicado</returns>
-        public Servicios? ServicioActual(string placa)
+        /// <param name="vehiculo">Vehiculo a procesar servicio</param>
+        /// <exception cref="ArgumentException"></exception>
+        public void ProcesarServicio(Vehiculo vehiculo)
         {
-            Vehiculo? aux = VehiculosRegistrados.BuscarElemento(V => V.Placa == placa);
-            if(aux != null)
+            //Valida que el vehiculo ingresado pertenezca al cliente
+            Vehiculo VehiculoModificar = VehiculosRegistrados.SearchElementByCondition(V => V == vehiculo) ?? throw new ArgumentException("Vehiculo no pertenece al cliente");
+            
+            if(VehiculoModificar.ServicioUbicado.HasValue)
             {
-                return aux.ServicioUbicado;
-            }
-            return null;
-        }
+                decimal precio = ServiceManager.GetServicePrice(VehiculoModificar.ServicioUbicado.Value, VehiculoModificar.Tipo);
 
-        /// <summary>
-        /// Procesa el servicio actualmente activo del cliente
-        /// </summary>
-        public void ProcesarServicio(string placa)
-        {
-            Vehiculo? mod = VehiculosRegistrados.BuscarElemento(V => V.Placa == placa && V.ServicioUbicado != null);
-            if(mod != null)
-            {
-                if(mod.ServicioUbicado.HasValue)
-                {
-                    ServiciosConsumidos.Insertar((mod.ServicioUbicado.Value, mod.Tipo));
-                    DeudaTotal += (float)Operadores.PrecioServicios(mod.ServicioUbicado.Value, mod.Tipo);
-                    NumeroDeCuotas = 1;
-                    mod.AsignarServicio(null);
-                }
-            }
-        }
+                ServiciosConsumidos.AddLast((VehiculoModificar.ServicioUbicado.Value, precio));
 
-        /// <summary>
-        /// Cancela el servicio en el que se encuentre el cliente
-        /// </summary>
-        public void CancelarServicio(string placa)
-        {
-            Vehiculo? mod = VehiculosRegistrados.BuscarElemento(V => V.Placa == placa);
-            mod?.CancelarServicio();
+                DeudaTotal += precio;
+
+                NumeroDeCuotas = 1;
+
+                VehiculoModificar.CancelarServicio();
+            }
         }
 
         /// <summary>
@@ -169,7 +120,7 @@ namespace Autolavado_GeorgesChakour.Clases
             DeudaTotal = 0;
             NumeroDeCuotas = 0;
             MontoPorCuota = 0;
-            ServiciosConsumidos.LimpiarLista();
+            ServiciosConsumidos.CleanList();
         }
 
         public void DeshabilitarCliente()
@@ -205,7 +156,7 @@ namespace Autolavado_GeorgesChakour.Clases
         {
             if(NumeroDeCuotas > 0 && NumeroDeCuotas <= 4)
             {
-                if(NumeroDeCuotas == 1)
+                if(NumeroDeCuotas == 1 && MontoPorCuota == DeudaTotal)
                 {
                     LimpiarFactura();
                     return;
@@ -222,7 +173,7 @@ namespace Autolavado_GeorgesChakour.Clases
         /// <returns>Enum que contiene el tipo de vehiculo de la placa ingresada, puede ser null</returns>
         public TipoDeVehiculo? TipoVehiculoPorPlaca(string placa)
         {
-            Vehiculo? aux = VehiculosRegistrados.BuscarElemento(V => V.Placa == placa);
+            Vehiculo? aux = VehiculosRegistrados.SearchElementByCondition(V => V.Placa == placa);
             if (aux != null)
             {
                 return aux.Tipo;
@@ -237,7 +188,7 @@ namespace Autolavado_GeorgesChakour.Clases
         /// <returns>Booleano que indica si alguna de las placas ingresadas ya se encontraba cargada</returns>
         public bool PlacaYaRegistrada(string[] placas)
         {
-            return VehiculosRegistrados.BuscarElemento(V => placas.Contains(V.Placa)) != null;
+            return VehiculosRegistrados.SearchElementByCondition(V => placas.Contains(V.Placa)) != null;
         }
 
         /// <summary>
@@ -247,7 +198,7 @@ namespace Autolavado_GeorgesChakour.Clases
         /// <returns>Booleano que indica si la placa se encontraba registrada</returns>
         public bool PlacaYaRegistrada(string placa)
         {
-            return VehiculosRegistrados.BuscarElemento(V => V.Placa == placa) != null;
+            return VehiculosRegistrados.SearchElementByCondition(V => V.Placa == placa) != null;
         }
 
         /// <summary>
@@ -256,26 +207,13 @@ namespace Autolavado_GeorgesChakour.Clases
         /// <returns>Arreglo de string que contiene todas las placas</returns>
         public string[] PlacasArray()
         {
-            string[] plaq = new string[VehiculosRegistrados.Cant];
+            string[] plaq = new string[VehiculosRegistrados.Count];
             uint i = 0;
             foreach(Vehiculo carr in VehiculosRegistrados)
             {
                 plaq[i++] = carr.Placa;
             }
             return plaq;
-        }
-
-        /// <summary>
-        /// Abre un formulario y devuelve un vehiculo, retorna null si no se selecciono ninguno
-        /// </summary>
-        /// <returns>Vehiculo del cliente seleccionado</returns>
-        public Vehiculo? ElegirVehiculo()
-        {
-            SeleccionarVehiculo selec = new(this);
-            selec.ShowDialog();
-            Vehiculo? retorno = selec.VehiculoSeleccionado;
-            selec.Dispose();
-            return retorno;
         }
 
         /// <summary>
@@ -288,7 +226,6 @@ namespace Autolavado_GeorgesChakour.Clases
             JArray Consumos = [];
             if(VehiculosRegistrados != null)
             {
-                JObject aux = [];
                 foreach (Vehiculo veh in VehiculosRegistrados)
                 {
                     carros.Add(new JObject(new JProperty(nameof(veh.Modelo), veh.Modelo),
@@ -298,20 +235,20 @@ namespace Autolavado_GeorgesChakour.Clases
                                );
                 }
             }
-            foreach((Servicios, TipoDeVehiculo) serv in ServiciosConsumidos)
+            foreach ((Services, TipoDeVehiculo) serv in ServiciosConsumidos)
             {
                 Consumos.Add(serv.ToString());
             }
             JObject obj = [];
-            obj.Add(nameof(Id), this.Id);
-            obj.Add(nameof(Datos), JProperty.FromObject(Name));
-            obj.Add(nameof(Cedula), this.Cedula);
+            obj.Add(nameof(Id), Id);
+            obj.Add(nameof(Datos), JToken.FromObject(Name));
+            obj.Add(nameof(Cedula), Cedula);
             obj.Add(new JProperty(nameof(VehiculosRegistrados), carros));
-            obj.Add(nameof(Enabled), this.Enabled);
+            obj.Add(nameof(Enabled), Enabled);
             obj.Add(new JProperty(nameof(ServiciosConsumidos), Consumos));
-            obj.Add("Deuda", new JObject(new JProperty(nameof(DeudaTotal), this.DeudaTotal),
-                                         new JProperty(nameof(MontoPorCuota), this.MontoPorCuota),
-                                         new JProperty(nameof(NumeroDeCuotas), this.NumeroDeCuotas)
+            obj.Add("Deuda", new JObject(new JProperty(nameof(DeudaTotal), DeudaTotal),
+                                         new JProperty(nameof(MontoPorCuota), MontoPorCuota),
+                                         new JProperty(nameof(NumeroDeCuotas), NumeroDeCuotas)
                                                     )
                     );
             return obj;
@@ -324,45 +261,49 @@ namespace Autolavado_GeorgesChakour.Clases
         /// <returns>Booleano que indica si la conversión se realizó correctamente</returns>
         public bool DeserializeFromJson(JToken data)
         {
-            this.Id = (uint)data[nameof(Id)];
-            this.Name = data[nameof(Datos)].ToObject<Datos>();
+            Id = (uint)data[nameof(Id)];
+            Name = data[nameof(Datos)].ToObject<Datos>();
 
-            this.VehiculosRegistrados = new();
+            VehiculosRegistrados = new();
             Vehiculo veh;
             JArray carr = (JArray)data[nameof(VehiculosRegistrados)];
             foreach (JToken c in carr)
             {
                 TipoDeVehiculo tipovehiculo;
-                if(Enum.TryParse<TipoDeVehiculo>(c[nameof(veh.Tipo)].ToString(), out tipovehiculo))
+                if(Enum.TryParse(c[nameof(veh.Tipo)].ToString(), out tipovehiculo))
                 {
                     veh = new(  tipovehiculo,
                                 c[nameof(veh.Modelo)].ToString(),
                                 c[nameof(veh.Placa)].ToString(),
                                 null
                                 );
-                     VehiculosRegistrados.Insertar(veh);
+                     VehiculosRegistrados.AddLast(veh);
                 }
             }
-            carr = null; 
+            carr = null;
+            Cedula = data[nameof(Cedula)]?.ToString() ?? string.Empty;
 
-            this.Cedula = data[nameof(Cedula)].ToString();
-            this.Enabled = Convert.ToBoolean(data[nameof(Enabled)]);
-            this.NumeroDeCuotas = (uint)data["Deuda"][nameof(NumeroDeCuotas)];
-            this.MontoPorCuota = (float)data["Deuda"][nameof(MontoPorCuota)];
+            Enabled = Convert.ToBoolean(data[nameof(Enabled)]);
 
-            this.DeudaTotal = (float)data["Deuda"][nameof(DeudaTotal)];
+            JToken? deudaToken = data["Deuda"];
+            if (deudaToken != null)
+            {
+                NumeroDeCuotas = (uint)(deudaToken[nameof(NumeroDeCuotas)] ?? 0);
+                MontoPorCuota = (decimal)(deudaToken[nameof(MontoPorCuota)] ?? 0);
+                DeudaTotal = (decimal)(deudaToken[nameof(DeudaTotal)] ?? 0);
+            }
 
-            this.ServiciosConsumidos = new();
+            ServiciosConsumidos = new();
             carr = (JArray)data[nameof(ServiciosConsumidos)];
-            (Servicios, TipoDeVehiculo) ser;
+            (Services, decimal) ser;
             foreach(var c in carr)
             {
-                var servicios = c.ToString().Trim('(', ')').Split(", ");
+                string[] servicios = c.ToString().Trim('(', ')').Split(", ");
 
                 Enum.TryParse(servicios[0], out ser.Item1);
-                Enum.TryParse(servicios[1], out ser.Item2);
+                ser.Item2 = decimal.Parse(servicios[1]);
 
-                ServiciosConsumidos.Insertar(ser);
+                ServiciosConsumidos.AddLast(ser);
             }
             return true;
         }
@@ -372,12 +313,12 @@ namespace Autolavado_GeorgesChakour.Clases
         /// <returns>Copia de la instancia del cliente</returns>
         public Cliente Copia()
         {
-            return (Cliente)this.MemberwiseClone();
+            return (Cliente)MemberwiseClone();
         }
 
         public override string ToString()
         {
-            return $"{this.Name.Nombre} {this.Name.Apellido}";
+            return $"{Name.Nombre} {Name.Apellido}";
         }
     }
 }

@@ -1,8 +1,6 @@
-﻿using Proyecto_Autolavado_Georges;
-
-namespace Autolavado_GeorgesChakour.Clases
+﻿namespace Proyecto_Autolavado_Georges.Clases.DataClasses
 {
-    public class Cola<T>(uint size) : Lista<T>
+    public class CustomQueue<T>(uint size) : CustomLinkedList<T>
     {
         #region Atributos
         public uint Size { get; private set; } = size;
@@ -14,11 +12,11 @@ namespace Autolavado_GeorgesChakour.Clases
         /// </summary>
         /// <param name="dato">Elemento a ingresar en la cola</param>
         /// <returns>booleano que indica si se pudo ingresar (false si la cola está llena)</returns>
-        public bool InsertarCola(T dato)
+        public bool Insert(T dato)
         {
-            if (!ColaLlena())
+            if (!IsFull())
             {
-                Insertar(dato);
+                AddLast(dato);
                 Final++;
                 return true;
             }
@@ -28,12 +26,12 @@ namespace Autolavado_GeorgesChakour.Clases
         /// Retira un elemento de la lista, si se encuentra vacia, no retorna nada
         /// </summary>
         /// <returns>retorna el elemento en la primera posición de la cola</returns>
-        public T? Retirar()
+        public T? Retire()
         {
-            if (!ColaVacia())
+            if (!IsEmpty())
             {
-                T aux = PrimerElemento();
-                if(Eliminar(aux))
+                T aux = GetFirstElement();
+                if(Delete(aux))
                 {
                 Final--;
                 }
@@ -42,9 +40,9 @@ namespace Autolavado_GeorgesChakour.Clases
             return default;
         }
 
-        public bool EliminarCola(T dato)
+        public bool DeleteQueue(T dato)
         {
-            if (Eliminar(dato))
+            if (Delete(dato))
             {
                 Final--;
                 return true;
@@ -57,24 +55,16 @@ namespace Autolavado_GeorgesChakour.Clases
         /// </summary>
         /// <param name="dato">Elemento a buscar</param>
         /// <returns>booleano que indica si el elemento ingresado es o no el primero</returns>
-        public bool EsPrimerElemento(T dato)
+        public bool IsFirstElement(T dato)
         {
-            return IComparable.Equals(dato, PrimerElemento());
+            return Equals(dato, GetFirstElement());
         }
 
-        /// <summary>
-        /// Indica si la cola se encuentra vacia
-        /// </summary>
-        /// <returns>booleano que indica si la cola no contiene elementos</returns>
-        public bool ColaVacia()
-        {
-            return Final == -1;
-        }
         /// <summary>
         /// Indica si la cola se encuentra llena
         /// </summary>
         /// <returns>booleano que indica si la cola no puede contener más elementos</returns>
-        public bool ColaLlena()
+        public bool IsFull()
         {
             return Final == Size - 1;
         }
@@ -88,12 +78,21 @@ namespace Autolavado_GeorgesChakour.Clases
         }
 
         /// <summary>
+        /// Elimina todos los elementos de la cola
+        /// </summary>
+        public void CleanQueue()
+        {
+            CleanList();
+            Final = -1;
+        }
+
+        /// <summary>
         /// Crea una copia del objeto
         /// </summary>
         /// <returns>Copia de la cola</returns>
-        public Cola<T> Copia()
+        public CustomQueue<T> Copy()
         {
-            return (Cola<T>)this.MemberwiseClone();
+            return (CustomQueue<T>)MemberwiseClone();
         }
     }
 }

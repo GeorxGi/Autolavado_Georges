@@ -1,63 +1,61 @@
 ﻿using System.Collections;
-using System.Text.Json.Nodes;
 
-namespace Proyecto_Autolavado_Georges
+namespace Proyecto_Autolavado_Georges.Clases.DataClasses
 {
-    public class Lista<T> : IEnumerable<T>
+    public class CustomLinkedList<T> : IEnumerable<T>
     {
         /// <summary>
         /// Cantidad de elementos que se encuentran en la lista
         /// </summary>
-        public int Cant { get; private set; }
+        public uint Count { get; private set; }
         protected Node<T> Head;
         protected Node<T> Last;
 
-        public Lista()
+        public CustomLinkedList()
         {
             Head = Last = null;
-            Cant = 0;
+            Count = 0;
         }
 
         /// <summary>
         /// Indica si la lista se encuentra vacia
         /// </summary>
         /// <returns>Booleano que retorna verdadero si la lista no posee elementos</returns>
-        public bool ListaVacia()
+        public bool IsEmpty()
         {
             return Head == null;
         }
 
-        public void Insertar(T dato)
+        public void AddLast(T value)
         {
-             Node<T> nuevoNodo = new(dato);
+             Node<T> newNode = new(value);
             if (Head == null)
             {
-                Head = nuevoNodo;
-                Last = nuevoNodo;
-                Cant++;
+                Head = newNode;
+                Last = newNode;
+                Count++;
             }
             else
             {
-                Last.SetNextNode(nuevoNodo);
-                Last = nuevoNodo;
-                Cant++;
+                Last.SetNextNode(newNode);
+                Last = newNode;
+                Count++;
             }
         }
-
 
         /// <summary>
         /// Busca el elemento en la lista y lo retorna
         /// </summary>
-        /// <param name="condicion">Condición o valor con el que buscar el elemento</param>
+        /// <param name="condition">Condición o valor con el que buscar el elemento</param>
         /// <returns>Dato almacenado en lista que cumpla la condición</returns>
-        public T? BuscarElemento(Func<T, bool> condicion)
+        public T? SearchElementByCondition(Func<T, bool> condition)
         {
             Node<T> current = Head;
             while (current != null)
             {
-                if (condicion(current.Dato))
+                if (condition(current.Element))
                 {
-                    return current.Dato;
+                    return current.Element;
                 }
                 else
                 {
@@ -70,36 +68,36 @@ namespace Proyecto_Autolavado_Georges
         /// <summary>
         /// Elimina el elemento ingresado de la lista
         /// </summary>
-        /// <param name="dato">Elemento a eliminar</param>
+        /// <param name="value">Elemento a eliminar</param>
         /// <returns>Booleano que indica si la operación se realizó correctamente</returns>
-        public bool Eliminar(T dato)
+        public bool Delete(T value)
         {
             Node<T> current = Head;
-            Node<T> Previous = null;
+            Node<T> previous = null;
 
             while (current != null)
             {
-                if (IComparable.Equals(dato, current.Dato))
+                if (Equals(value, current.Element))
                 {
-                    if (Previous == null)
+                    if (previous == null)
                     {
                         Head = current.NextNode;
                     }
                     else if(current == Last)
                     {
-                        Last = Previous;
+                        Last = previous;
                         Last.SetNextNode(null);
                     }
                     else
                     {
-                        Previous.SetNextNode(current.NextNode);
+                        previous.SetNextNode(current.NextNode);
                     }
                     GC.Collect();
-                    Cant--;
+                    Count--;
                     return true;
                 }
 
-                Previous = current;
+                previous = current;
                 current = current.NextNode;
             }
             return false;
@@ -109,23 +107,23 @@ namespace Proyecto_Autolavado_Georges
         /// Retorna el primer elemento de la lista
         /// </summary>
         /// <returns>Primer elemento de la lista</returns>
-        protected T PrimerElemento()
+        protected T GetFirstElement()
         {
-            return this.Head.Dato;
+            return Head.Element;
         }
         /// <summary>
         /// Retorna el ultimo elemento de la lista
         /// </summary>
         /// <returns>Ultimo elemento de la lista</returns>
-        protected T UltimoElemento()
+        protected T GetLastElement()
         {
-            return this.Last.Dato;
+            return Last.Element;
         }
 
         /// <summary>
         /// Limpia todos los elementos que existan en la lista
         /// </summary>
-        public void LimpiarLista()
+        public void CleanList()
         {
             Node<T> current = Head;
             Node<T> next;
@@ -136,9 +134,22 @@ namespace Proyecto_Autolavado_Georges
                 current = next;
 
             } while (current != null);
-            Cant = 0;
+            Count = 0;
             Head = Last = null;
             GC.Collect();
+        }
+
+        public T[] ToArray()
+        {
+            T[] array = new T[Count];
+            Node<T> current = Head;
+            uint ind = 0;
+
+            while(current != null)
+            {
+                array[ind] = current.Element;
+            }
+            return array;
         }
 
         public IEnumerator<T> GetEnumerator()
@@ -146,7 +157,7 @@ namespace Proyecto_Autolavado_Georges
             Node<T> current = Head;
             while (current != null)
             {
-                yield return current.Dato;
+                yield return current.Element;
                 current = current.NextNode;
             }
         }

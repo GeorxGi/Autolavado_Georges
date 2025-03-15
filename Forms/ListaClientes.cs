@@ -1,5 +1,8 @@
-﻿using Autolavado_GeorgesChakour.Clases;
-using Proyecto_Autolavado_Georges.Classes;
+﻿using Proyecto_Autolavado_Georges.Clases.DataClasses;
+using Proyecto_Autolavado_Georges.Clases.DataHandlers;
+using Proyecto_Autolavado_Georges.Clases.UI;
+using Proyecto_Autolavado_Georges.Clases.UserClasses;
+
 namespace Proyecto_Autolavado_Georges.Formularios
 {
     public partial class ListaClientes : Form
@@ -10,11 +13,13 @@ namespace Proyecto_Autolavado_Georges.Formularios
             Servicios,
             Factura
         }
-        private Lista<Cliente> clientes;
-        private Cola<(uint, Vehiculo?)> colaElementos;
+        private readonly ClientList clientes;
+        private readonly CustomQueue<(uint, Vehiculo?)> colaElementos;
 
-        private Cliente clienteInd;
-        private TipoLista tipo;
+        private readonly Cliente clienteInd;
+        private readonly TipoLista tipo;
+
+        private static string FormatMoney(string prefix, decimal money) => prefix + string.Format("{0:0.00}", money);
 
         public bool Pagado { get; private set; } = false;
 
@@ -23,7 +28,7 @@ namespace Proyecto_Autolavado_Georges.Formularios
         /// </summary>
         /// <param name="clients"></param>
         /// <param name="colaBusqueda"></param>
-        public ListaClientes(Lista<Cliente> clients, Cola<(uint, Vehiculo?)> colaBusqueda)
+        public ListaClientes(ClientList clients, CustomQueue<(uint, Vehiculo)> colaBusqueda)
         {
             clientes = clients;
             colaElementos = colaBusqueda;
@@ -42,7 +47,11 @@ namespace Proyecto_Autolavado_Georges.Formularios
             InitializeComponent();
         }
 
-        public ListaClientes(Lista<Cliente> client)
+        /// <summary>
+        /// Lista de clientes
+        /// </summary>
+        /// <param name="client">Lista de la cual se tomará la información</param>
+        public ListaClientes(ClientList client)
         {
             clientes = client;
             tipo = TipoLista.Clientes;
@@ -54,12 +63,17 @@ namespace Proyecto_Autolavado_Georges.Formularios
             dataGridView1.Columns.Remove("posicion");
             dataGridView1.Columns.Add("deuda", "Deuda ($)");
             dataGridView1.Columns.Add("inService", "Servicio actual");
+
+            foreach (DataGridViewColumn column in dataGridView1.Columns)
+            {
+                column.SortMode = DataGridViewColumnSortMode.NotSortable;
+            }
             foreach (Cliente cliente in clientes)
             {
                 if (cliente.Enabled)
                 {
                     dataGridView1.Rows.Add(cliente.Id.ToString(), cliente.Name.Nombre, cliente.Name.Apellido,
-                    cliente.Cedula, "", "", "", $"${cliente.DeudaTotal}");
+                    cliente.Cedula, "", "", "", FormatMoney("$", cliente.DeudaTotal));
                     foreach (Vehiculo carr in cliente.VehiculosRegistrados)
                     {
                         dataGridView1.Rows.Add("", "||", "||", "||", carr.Placa, carr.Tipo, carr.Modelo, "", carr.ServicioUbicado.ToString());
@@ -70,27 +84,27 @@ namespace Proyecto_Autolavado_Georges.Formularios
 
         private void ListaClientesEspera()
         {
-            if (!colaElementos.ColaVacia())
+            if (!colaElementos.IsEmpty())
             {
                 uint id, cont = 1;
                 Vehiculo carr;
                 foreach ((uint, Vehiculo?) var in colaElementos)
                 {
                     id = var.Item1;
-                    carr = var.Item2 != null ? (Vehiculo)var.Item2 : new Vehiculo();
+
+                    carr = var.Item2 ?? new(); //Valida que el vehiculo de la lista no sea nulo
 
                     foreach (Cliente client in clientes)
                     {
-                        if (client.Id == id)
-                        {
-                            foreach (Vehiculo veh in client.VehiculosRegistrados)
-                            {
-                                if (veh.Placa == carr.Placa)
-                                {
-                                    dataGridView1.Rows.Add(client.Id, client.Name.Nombre, client.Name.Apellido, client.Cedula,
-                                                   carr.Placa, carr.Modelo, carr.Tipo.ToString(), cont++);
+                        if (client.Id != id) continue;
 
-                                }
+                        foreach (Vehiculo veh in client.VehiculosRegistrados)
+                        {
+                            if (veh.Placa == carr.Placa)
+                            {
+                                dataGridView1.Rows.Add(client.Id, client.Name.Nombre, client.Name.Apellido, client.Cedula,
+                                                carr.Placa, carr.Modelo, carr.Tipo.ToString(), cont++);
+
                             }
                         }
                     }
@@ -104,33 +118,41 @@ namespace Proyecto_Autolavado_Georges.Formularios
         }
         private void ListaServiciosConsumidos()
         {
-            pagarButton.Enabled = true; pagarButton.Visible = true;
-            decimal price = 0;
+            PayRoundButton.Enabled = true; PayRoundButton.Visible = true;
             dataGridView1.Columns.Clear();
             mainLabel.Text = $"Cliente: {clienteInd.Name.Nombre} {clienteInd.Name.Apellido}  |  Cédula: {clienteInd.Cedula}";
             dataGridView1.Columns.Add("item", "Item");
             dataGridView1.Columns.Add("service", "Servicio");
-            dataGridView1.Columns.Add("model_serviced", "Modelo atendido");
             dataGridView1.Columns.Add("pricedollar", "Monto ($)");
             dataGridView1.Columns.Add("pricebs", "Monto (Bs)");
-            if (clienteInd.ServiciosConsumidos.Cant > 0)
+            
+            foreach (DataGridViewColumn column in dataGridView1.Columns)
             {
-                uint i = 1;
-                decimal total = 0;
-                foreach ((Servicios, TipoDeVehiculo) servicio in clienteInd.ServiciosConsumidos)
+                column.SortMode = DataGridViewColumnSortMode.NotSortable;
+            }
+
+            if (clienteInd.ServiciosConsumidos.Count > 0)
+            {
+                uint Indice = 1;
+                decimal MontoTotal = 0;
+                foreach ((Services, decimal) servicio in clienteInd.ServiciosConsumidos)
                 {
-                    price = Operadores.PrecioServicios(servicio.Item1, servicio.Item2);
-                    total += price;
-                    dataGridView1.Rows.Add(i++, servicio.Item1.ToString(), servicio.Item2.ToString(), $"${price}", string.Format("Bs. {0:0.00}", price * TasaCambio.TasaBcv));
+                    MontoTotal += servicio.Item2;
+                    dataGridView1.Rows.Add(Indice++, servicio.Item1.ToString(), FormatMoney("$", servicio.Item2),FormatMoney("Bs. ", servicio.Item2 * TasaCambio.TasaBcv));
                 }
                 dataGridView1.Rows.Add();
-                dataGridView1.Rows.Add("Total", "", "", $"${total}", string.Format("Bs. {0:0.00}", total * TasaCambio.TasaBcv));
-                dataGridView1.Rows.Add("Monto a pagar", "", "", $"${clienteInd.DeudaTotal}", string.Format("Bs. {0:0.00}", (decimal)clienteInd.DeudaTotal * TasaCambio.TasaBcv));
+                dataGridView1.Rows.Add("Total", "", FormatMoney("$", MontoTotal), FormatMoney("Bs.", MontoTotal * TasaCambio.TasaBcv));
+                decimal montoAbonado = MontoTotal - clienteInd.DeudaTotal;
+                dataGridView1.Rows.Add("Monto abonado", "", FormatMoney("$", montoAbonado), FormatMoney("Bs.", montoAbonado * TasaCambio.TasaBcv)); 
+                dataGridView1.Rows.Add("Monto a pagar", "", FormatMoney("$", clienteInd.DeudaTotal), FormatMoney("Bs.", clienteInd.DeudaTotal * TasaCambio.TasaBcv));
             }
         }
 
         private void ListaClientes_Load(object sender, EventArgs e)
         {
+            AppSettings.LoadMenuColor(this);
+            dataGridView1.GridColor = AppSettings.MainColor;
+            dataGridView1.ColumnHeadersDefaultCellStyle.BackColor = AppSettings.MainColor;
             switch (tipo)
             {
                 case TipoLista.Servicios:
@@ -160,28 +182,16 @@ namespace Proyecto_Autolavado_Georges.Formularios
         {
             if (clienteInd.NumeroDeCuotas > 1)
             {
-                Cliente mod = clienteInd.Copia();
                 if (clienteInd.RegistrarCuota(clienteInd.NumeroDeCuotas - 1))
                 {
-                    MessageBox.Show($"Monto a pagar: {clienteInd.MontoPorCuota}");
+                    MessageBox.Show($"Monto a pagar: {FormatMoney("$", clienteInd.MontoPorCuota)}");
                 }
             }
         }
 
-        private void ListaClientes_KeyDown(object sender, KeyEventArgs e)
+        private void CloseWithEscape(object sender, KeyEventArgs e)
         {
-            if (e.KeyCode == Keys.Escape)
-            {
-                this.Close();
-            }
-        }
-
-        private void dataGridView1_KeyDown(object sender, KeyEventArgs e)
-        {
-            if (e.KeyCode == Keys.Escape)
-            {
-                this.Close();
-            }
+            UIHandler.CloseWithEscape(e, this);
         }
     }
 }

@@ -31,13 +31,13 @@
             label1 = new Label();
             tipoCarrocomboBox = new ComboBox();
             label4 = new Label();
-            CleanRegisterButton = new Button();
-            AcceptRegisterButton = new Button();
+            AcceptRoundButton = new Proyecto_Autolavado_Georges.Clases.CustomFormControls.RoundButton();
+            CancelRoundButton = new Proyecto_Autolavado_Georges.Clases.CustomFormControls.RoundButton();
             SuspendLayout();
             // 
             // label1
             // 
-            label1.Font = new Font("Segoe UI Semibold", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            label1.Font = new Font("Verdana", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
             label1.Location = new Point(12, 9);
             label1.Name = "label1";
             label1.Size = new Size(306, 43);
@@ -65,41 +65,53 @@
             label4.Text = "Vehículo:";
             label4.TextAlign = ContentAlignment.MiddleLeft;
             // 
-            // CleanRegisterButton
+            // AcceptRoundButton
             // 
-            CleanRegisterButton.BackColor = Color.Crimson;
-            CleanRegisterButton.Cursor = Cursors.Hand;
-            CleanRegisterButton.Font = new Font("Arial Black", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            CleanRegisterButton.ForeColor = SystemColors.Control;
-            CleanRegisterButton.Location = new Point(208, 135);
-            CleanRegisterButton.Name = "CleanRegisterButton";
-            CleanRegisterButton.Size = new Size(110, 35);
-            CleanRegisterButton.TabIndex = 4;
-            CleanRegisterButton.Text = "Cancelar";
-            CleanRegisterButton.UseVisualStyleBackColor = false;
-            CleanRegisterButton.Click += CleanRegisterButton_Click;
+            AcceptRoundButton.BackColor = Color.Brown;
+            AcceptRoundButton.BorderColor = SystemColors.ActiveCaption;
+            AcceptRoundButton.BorderRadius = 10;
+            AcceptRoundButton.BorderSize = 0;
+            AcceptRoundButton.Cursor = Cursors.Hand;
+            AcceptRoundButton.FlatStyle = FlatStyle.Flat;
+            AcceptRoundButton.Font = new Font("Verdana", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            AcceptRoundButton.ForeColor = Color.White;
+            AcceptRoundButton.IsFilledButton = true;
+            AcceptRoundButton.Location = new Point(12, 132);
+            AcceptRoundButton.Name = "AcceptRoundButton";
+            AcceptRoundButton.Size = new Size(110, 40);
+            AcceptRoundButton.TabIndex = 1;
+            AcceptRoundButton.Tag = "";
+            AcceptRoundButton.Text = "Aceptar";
+            AcceptRoundButton.UseVisualStyleBackColor = false;
+            AcceptRoundButton.Click += AcceptButton_Click;
             // 
-            // AcceptRegisterButton
+            // CancelRoundButton
             // 
-            AcceptRegisterButton.BackColor = Color.PaleGreen;
-            AcceptRegisterButton.Cursor = Cursors.Hand;
-            AcceptRegisterButton.Font = new Font("Arial Black", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            AcceptRegisterButton.Location = new Point(12, 135);
-            AcceptRegisterButton.Name = "AcceptRegisterButton";
-            AcceptRegisterButton.Size = new Size(110, 35);
-            AcceptRegisterButton.TabIndex = 3;
-            AcceptRegisterButton.Text = "Aceptar";
-            AcceptRegisterButton.UseCompatibleTextRendering = true;
-            AcceptRegisterButton.UseVisualStyleBackColor = false;
-            AcceptRegisterButton.Click += AcceptRegisterButton_Click;
+            CancelRoundButton.BackColor = SystemColors.Control;
+            CancelRoundButton.BorderColor = Color.Brown;
+            CancelRoundButton.BorderRadius = 10;
+            CancelRoundButton.BorderSize = 2;
+            CancelRoundButton.Cursor = Cursors.Hand;
+            CancelRoundButton.FlatStyle = FlatStyle.Flat;
+            CancelRoundButton.Font = new Font("Verdana", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            CancelRoundButton.ForeColor = Color.Brown;
+            CancelRoundButton.IsFilledButton = false;
+            CancelRoundButton.Location = new Point(208, 132);
+            CancelRoundButton.Name = "CancelRoundButton";
+            CancelRoundButton.Size = new Size(110, 40);
+            CancelRoundButton.TabIndex = 2;
+            CancelRoundButton.Tag = "";
+            CancelRoundButton.Text = "Cancelar";
+            CancelRoundButton.UseVisualStyleBackColor = false;
+            CancelRoundButton.Click += CancelRoundButton_Click;
             // 
             // SeleccionarVehiculo
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(330, 177);
-            Controls.Add(CleanRegisterButton);
-            Controls.Add(AcceptRegisterButton);
+            Controls.Add(CancelRoundButton);
+            Controls.Add(AcceptRoundButton);
             Controls.Add(tipoCarrocomboBox);
             Controls.Add(label4);
             Controls.Add(label1);
@@ -121,7 +133,8 @@
         private Label label1;
         private ComboBox tipoCarrocomboBox;
         private Label label4;
-        private Button CleanRegisterButton;
         private Button AcceptRegisterButton;
+        private Clases.CustomFormControls.RoundButton AcceptRoundButton;
+        private Clases.CustomFormControls.RoundButton CancelRoundButton;
     }
 }

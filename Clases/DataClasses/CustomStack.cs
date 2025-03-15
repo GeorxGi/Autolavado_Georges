@@ -1,8 +1,6 @@
-﻿using Proyecto_Autolavado_Georges;
-
-namespace Autolavado_GeorgesChakour.Clases
+﻿namespace Proyecto_Autolavado_Georges.Clases.DataClasses
 {
-    class Pila<T>(uint size) : Lista<T>
+    class CustomStack<T>(uint size) : CustomLinkedList<T>
     {
         #region Atributos
         public uint Size { get; private set; } = size;
@@ -15,23 +13,17 @@ namespace Autolavado_GeorgesChakour.Clases
         /// Verifica que el objeto de la pila se encuentre lleno
         /// </summary>
         /// <returns>booleano que indica si la pila se encuentra llena</returns>
-        public bool PilaLlena()
+        public bool IsFull()
         {
             return top == Size - 1;
         }
-        /// <summary>
-        /// Verifica que el objeto de la pila se encuentre vacio
-        /// </summary>
-        /// <returns>booleano que indica si la pila se encuentra vacia</returns>
-        public bool PilaVacia()
-        {
-            return top == -1;
-        }
+
         /// <summary>
         /// Reinicia los indices, deshaciendo cualquier dato almacenado en la pila
         /// </summary>
-        public void LimpiarPila()
+        public void CleanStack()
         {
+            CleanList();
             top = -1;
         }
 
@@ -44,9 +36,9 @@ namespace Autolavado_GeorgesChakour.Clases
         /// <returns>booleano que indica si la operacion pudo realizarse</returns>
         public bool Push(T data)
         {
-            if (!PilaLlena())
+            if (!IsFull())
             {
-                Insertar(data);
+                AddLast(data);
                 top++;
                 return true;
             }
@@ -62,10 +54,10 @@ namespace Autolavado_GeorgesChakour.Clases
         /// <returns></returns>
         public T? Pop()
         {
-            if (!PilaVacia())
+            if (!IsEmpty())
             {
-                T aux = UltimoElemento();
-                Eliminar(aux);
+                T aux = GetLastElement();
+                Delete(aux);
                 top--;
                 return aux;
             }

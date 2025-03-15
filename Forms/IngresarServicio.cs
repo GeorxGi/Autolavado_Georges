@@ -1,18 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
+﻿using Proyecto_Autolavado_Georges.Clases.DataHandlers;
+using Proyecto_Autolavado_Georges.Clases.UI;
 
 namespace Proyecto_Autolavado_Georges.Formularios
 {
     public partial class IngresarServicio : Form
     {
-        public Servicios? Servicio { get; private set; }
+        public Services? Servicio { get; private set; }
         public IngresarServicio()
         {
             Servicio = null;
@@ -21,36 +14,37 @@ namespace Proyecto_Autolavado_Georges.Formularios
 
         private void balanceoButton_Click(object sender, EventArgs e)
         {
-            Servicio = Servicios.Balanceo;
+            Servicio = Services.Balanceo;
             this.Close();
         }
 
         private void aceiteButton_Click(object sender, EventArgs e)
         {
-            Servicio = Servicios.Aceite;
+            Servicio = Services.Aceite;
             this.Close();
         }
 
         private void aspiradoButton_Click(object sender, EventArgs e)
         {
-            Servicio = Servicios.Aspirado;
+            Servicio = Services.Aspirado;
             this.Close();
         }
 
         private void lavadoButton_Click(object sender, EventArgs e)
         {
-            Servicio = Servicios.Lavado;
+            Servicio = Services.Lavado;
             this.Close();
         }
 
         private void secadoButton_Click(object sender, EventArgs e)
         {
-            Servicio = Servicios.Secado;
+            Servicio = Services.Secado;
             this.Close();
         }
 
         private void IngresarServicio_Load(object sender, EventArgs e)
         {
+            AppSettings.LoadMenuColor(this);
         }
 
         private void IngresarServicio_KeyDown(object sender, KeyEventArgs e)

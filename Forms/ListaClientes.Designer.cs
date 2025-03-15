@@ -42,7 +42,7 @@
             posicion = new DataGridViewTextBoxColumn();
             tableLayoutPanel1 = new TableLayoutPanel();
             mainLabel = new Label();
-            pagarButton = new Button();
+            PayRoundButton = new Proyecto_Autolavado_Georges.Clases.CustomFormControls.RoundButton();
             ((System.ComponentModel.ISupportInitialize)dataGridView1).BeginInit();
             tableLayoutPanel1.SuspendLayout();
             SuspendLayout();
@@ -56,9 +56,9 @@
             dataGridView1.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
             dataGridView1.BackgroundColor = Color.WhiteSmoke;
             dataGridViewCellStyle1.Alignment = DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle1.BackColor = SystemColors.Control;
-            dataGridViewCellStyle1.Font = new Font("Segoe UI", 9F);
-            dataGridViewCellStyle1.ForeColor = SystemColors.WindowText;
+            dataGridViewCellStyle1.BackColor = Color.Brown;
+            dataGridViewCellStyle1.Font = new Font("Verdana", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            dataGridViewCellStyle1.ForeColor = SystemColors.Control;
             dataGridViewCellStyle1.SelectionBackColor = Color.RosyBrown;
             dataGridViewCellStyle1.SelectionForeColor = SystemColors.HighlightText;
             dataGridViewCellStyle1.WrapMode = DataGridViewTriState.True;
@@ -92,7 +92,7 @@
             dataGridView1.ShowEditingIcon = false;
             dataGridView1.Size = new Size(794, 345);
             dataGridView1.TabIndex = 0;
-            dataGridView1.KeyDown += dataGridView1_KeyDown;
+            dataGridView1.KeyDown += CloseWithEscape;
             // 
             // id
             // 
@@ -172,7 +172,7 @@
             // 
             // mainLabel
             // 
-            mainLabel.Font = new Font("Arial", 12F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            mainLabel.Font = new Font("Verdana", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
             mainLabel.Location = new Point(3, 0);
             mainLabel.Name = "mainLabel";
             mainLabel.Size = new Size(794, 51);
@@ -180,25 +180,35 @@
             mainLabel.Text = ".";
             mainLabel.TextAlign = ContentAlignment.MiddleCenter;
             // 
-            // pagarButton
+            // PayRoundButton
             // 
-            pagarButton.Cursor = Cursors.Hand;
-            pagarButton.Enabled = false;
-            pagarButton.Location = new Point(678, 410);
-            pagarButton.Name = "pagarButton";
-            pagarButton.Size = new Size(110, 35);
-            pagarButton.TabIndex = 9;
-            pagarButton.Text = "Pagar total";
-            pagarButton.UseVisualStyleBackColor = true;
-            pagarButton.Visible = false;
-            pagarButton.Click += pagarButton_Click;
+            PayRoundButton.BackColor = Color.Brown;
+            PayRoundButton.BorderColor = SystemColors.ActiveCaption;
+            PayRoundButton.BorderRadius = 10;
+            PayRoundButton.BorderSize = 0;
+            PayRoundButton.Cursor = Cursors.Hand;
+            PayRoundButton.Enabled = false;
+            PayRoundButton.FlatStyle = FlatStyle.Flat;
+            PayRoundButton.Font = new Font("Verdana", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            PayRoundButton.ForeColor = Color.White;
+            PayRoundButton.IsFilledButton = true;
+            PayRoundButton.Location = new Point(678, 407);
+            PayRoundButton.Name = "PayRoundButton";
+            PayRoundButton.Size = new Size(110, 40);
+            PayRoundButton.TabIndex = 1;
+            PayRoundButton.Tag = "";
+            PayRoundButton.Text = "Realizar pago";
+            PayRoundButton.UseVisualStyleBackColor = false;
+            PayRoundButton.Visible = false;
+            PayRoundButton.Click += pagarButton_Click;
+            PayRoundButton.KeyDown += CloseWithEscape;
             // 
             // ListaClientes
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(800, 450);
-            Controls.Add(pagarButton);
+            Controls.Add(PayRoundButton);
             Controls.Add(tableLayoutPanel1);
             FormBorderStyle = FormBorderStyle.Fixed3D;
             MaximizeBox = false;
@@ -209,7 +219,7 @@
             StartPosition = FormStartPosition.CenterParent;
             Text = "Lista de clientes";
             Load += ListaClientes_Load;
-            KeyDown += ListaClientes_KeyDown;
+            KeyDown += CloseWithEscape;
             ((System.ComponentModel.ISupportInitialize)dataGridView1).EndInit();
             tableLayoutPanel1.ResumeLayout(false);
             ResumeLayout(false);
@@ -220,7 +230,6 @@
         private DataGridView dataGridView1;
         private TableLayoutPanel tableLayoutPanel1;
         private Label mainLabel;
-        private Button pagarButton;
         private DataGridViewTextBoxColumn id;
         private DataGridViewTextBoxColumn Nombre;
         private DataGridViewTextBoxColumn Apellido;
@@ -229,5 +238,6 @@
         private DataGridViewTextBoxColumn tipoVehiculo;
         private DataGridViewTextBoxColumn modeloVehiculo;
         private DataGridViewTextBoxColumn posicion;
+        private Clases.CustomFormControls.RoundButton PayRoundButton;
     }
 }

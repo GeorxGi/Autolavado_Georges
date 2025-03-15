@@ -1,25 +1,33 @@
-﻿using Autolavado_GeorgesChakour.Clases;
-using Newtonsoft.Json.Linq;
-using Proyecto_Autolavado_Georges.Classes;
-using System.Net.WebSockets;
+﻿using Proyecto_Autolavado_Georges.Clases.DataClasses;
+using Proyecto_Autolavado_Georges.Clases.DataHandlers;
+using Proyecto_Autolavado_Georges.Clases.UI;
+using Proyecto_Autolavado_Georges.Clases.UserClasses;
 
 namespace Proyecto_Autolavado_Georges.Formularios
 {
     public partial class SeleccionarVehiculo : Form
     {
-        public Vehiculo? VehiculoSeleccionado { get; private set; }
+        public enum GetVehicleMode
+        {
+            OnlyInService,
+            OnlyAvailable,
+            All
+        }
+
+        public Vehiculo PickedVehicle { get; private set; }
         private Vehiculo[] CarArray;
-        Lista<Vehiculo> list;
+        private readonly CustomLinkedList<Vehiculo> ClientsVehicle;
+        private readonly GetVehicleMode FilterMode;
 
         private void Seleccionado()
         {
             if (tipoCarrocomboBox.SelectedIndex == -1)
             {
-                VehiculoSeleccionado = null;
+                PickedVehicle = null;
             }
             else
             {
-                VehiculoSeleccionado = CarArray[tipoCarrocomboBox.SelectedIndex];
+                PickedVehicle = CarArray[tipoCarrocomboBox.SelectedIndex];
             }
         }
 
@@ -27,30 +35,55 @@ namespace Proyecto_Autolavado_Georges.Formularios
         /// Formulario para seleccionar uno de los vehiculos del cliente ingresado
         /// </summary>
         /// <param name="veh">Vehiculo a modificar</param>
-        public SeleccionarVehiculo(Cliente cliente)
+        public SeleccionarVehiculo(Cliente cliente, GetVehicleMode filter)
         {
-            VehiculoSeleccionado = null;
-            list = cliente.VehiculosRegistrados;
+            PickedVehicle = null;
+            ClientsVehicle = cliente.VehiculosRegistrados;
             InitializeComponent();
-        }
-
-        private void CleanRegisterButton_Click(object sender, EventArgs e)
-        {
-            this.Close();
+            FilterMode = filter;
         }
 
         private void FormularioVehiculo_Load(object sender, EventArgs e)
         {
-            CarArray = new Vehiculo[list.Cant];
+            AppSettings.LoadMenuColor(this);
+            CarArray = new Vehiculo[ClientsVehicle.Count];
             uint i = 0;
-            foreach (Vehiculo veh in list)
+
+            switch (FilterMode)
             {
-                CarArray[i++] = veh;
-                tipoCarrocomboBox.Items.Add($"{veh.Modelo} - {veh.Placa}");
+                case GetVehicleMode.OnlyInService:
+                    foreach (Vehiculo veh in ClientsVehicle)
+                    {
+                        if (veh.ServicioUbicado.HasValue)
+                        {
+                            CarArray[i++] = veh;
+                            tipoCarrocomboBox.Items.Add($"{veh.Modelo} - {veh.Placa}");
+                        }
+                    }
+                break;
+
+                case GetVehicleMode.OnlyAvailable:
+                    foreach (Vehiculo veh in ClientsVehicle)
+                    {
+                        if (!veh.ServicioUbicado.HasValue)
+                        {
+                            CarArray[i++] = veh;
+                            tipoCarrocomboBox.Items.Add($"{veh.Modelo} - {veh.Placa}");
+                        }
+                    }
+                break;
+
+                case GetVehicleMode.All:
+                    foreach (Vehiculo veh in ClientsVehicle)
+                    {
+                        CarArray[i++] = veh;
+                        tipoCarrocomboBox.Items.Add($"{veh.Modelo} - {veh.Placa}");
+                    }
+                break;
             }
         }
 
-        private void AcceptRegisterButton_Click(object sender, EventArgs e)
+        private void AcceptButton_Click(object sender, EventArgs e)
         {
             Seleccionado();
             this.Close();
@@ -75,6 +108,11 @@ namespace Proyecto_Autolavado_Georges.Formularios
                 Seleccionado();
                 this.Close();
             }
+        }
+
+        private void CancelRoundButton_Click(object sender, EventArgs e)
+        {
+            this.Close();
         }
     }
 }

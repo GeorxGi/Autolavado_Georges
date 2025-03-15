@@ -1,18 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
+﻿using Proyecto_Autolavado_Georges.Clases.UI;
 
 namespace Proyecto_Autolavado_Georges.Formularios
 {
     public partial class IngresarID : Form
     {
-        public int ReturnID { get; private set; }
+        public uint? ReturnID { get; private set; }
         private bool valid = false;
         public IngresarID()
         {
@@ -21,12 +13,12 @@ namespace Proyecto_Autolavado_Georges.Formularios
 
         private void textBox1_KeyPress(object sender, KeyPressEventArgs e)
         {
-            Interfaz.OnlyNumbers(sender, e);
+            UIHandler.OnlyNumbers(sender, e);
 
             if (e.KeyChar == (char)13)
             {
-                if (string.IsNullOrWhiteSpace(textBox1.Text) || Convert.ToInt16(textBox1.Text) < 1) ReturnID = -1;
-                else ReturnID = Convert.ToInt32(textBox1.Text);
+                if (string.IsNullOrWhiteSpace(textBox1.Text) || Convert.ToInt16(textBox1.Text) < 1) ReturnID = null;
+                else ReturnID = Convert.ToUInt32(textBox1.Text);
                 valid = true;
                 this.Close();
             }
@@ -41,7 +33,7 @@ namespace Proyecto_Autolavado_Georges.Formularios
         {
             if (!valid && string.IsNullOrWhiteSpace(textBox1.Text))
             {
-                ReturnID = -1;
+                ReturnID = null;
             }
         }
 

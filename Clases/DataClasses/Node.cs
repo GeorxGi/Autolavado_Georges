@@ -1,26 +1,26 @@
-﻿namespace Proyecto_Autolavado_Georges
+﻿namespace Proyecto_Autolavado_Georges.Clases.DataClasses
 {
     public class Node<T>
     {
-        public T Dato { get; private set; }
+        public T Element { get; private set; }
         public Node<T> NextNode { get; private set; }
 
-        public Node(T dato)
+        public Node(T value)
         {
-            Dato = dato;
+            Element = value;
             NextNode = null;
         }
         public void SetNextNode(Node<T> next)
         {
-            this.NextNode = next;
+            NextNode = next;
         }
         public void SetDato(T dato)
         {
-            this.Dato = dato;
+            Element = dato;
         }
         public void ModificarDato(T dato)
         {
-            this.Dato = dato;
+            Element = dato;
         }
     }
 }

@@ -103,16 +103,6 @@ namespace Proyecto_Autolavado_Georges.Properties {
         /// <summary>
         ///   Busca un recurso adaptado de tipo System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap cashea {
-            get {
-                object obj = ResourceManager.GetObject("cashea", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Busca un recurso adaptado de tipo System.Drawing.Bitmap.
-        /// </summary>
         internal static System.Drawing.Bitmap caucho_faltante {
             get {
                 object obj = ResourceManager.GetObject("caucho_faltante", resourceCulture);
@@ -126,6 +116,16 @@ namespace Proyecto_Autolavado_Georges.Properties {
         internal static System.Drawing.Bitmap caucho_listo {
             get {
                 object obj = ResourceManager.GetObject("caucho_listo", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Busca un recurso adaptado de tipo System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap color_picker_icon {
+            get {
+                object obj = ResourceManager.GetObject("color_picker_icon", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -163,6 +163,16 @@ namespace Proyecto_Autolavado_Georges.Properties {
         /// <summary>
         ///   Busca un recurso adaptado de tipo System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap info_icon {
+            get {
+                object obj = ResourceManager.GetObject("info_icon", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Busca un recurso adaptado de tipo System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap money_icon {
             get {
                 object obj = ResourceManager.GetObject("money_icon", resourceCulture);
@@ -176,6 +186,16 @@ namespace Proyecto_Autolavado_Georges.Properties {
         internal static System.Drawing.Bitmap services_icon {
             get {
                 object obj = ResourceManager.GetObject("services_icon", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Busca un recurso adaptado de tipo System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap ui_icon {
+            get {
+                object obj = ResourceManager.GetObject("ui_icon", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

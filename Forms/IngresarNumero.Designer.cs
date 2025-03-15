@@ -43,11 +43,12 @@
             // 
             // label1
             // 
-            label1.Font = new Font("Segoe UI Semibold", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            label1.Font = new Font("Verdana", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
             label1.Location = new Point(12, 9);
             label1.Name = "label1";
             label1.Size = new Size(210, 50);
             label1.TabIndex = 1;
+            label1.Tag = "mainLabel";
             label1.Text = "Mensaje";
             label1.TextAlign = ContentAlignment.TopCenter;
             // 
@@ -67,6 +68,7 @@
             StartPosition = FormStartPosition.CenterParent;
             Text = "Ingresar";
             FormClosed += IngresarID_FormClosed;
+            Load += IngresarNumero_Load;
             KeyDown += IngresarNumero_KeyDown;
             ResumeLayout(false);
             PerformLayout();
